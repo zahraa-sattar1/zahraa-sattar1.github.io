@@ -100,12 +100,16 @@ async function loadMockDataAsFallback() {
     state.useMockData = true;
     console.log("Loading mock data as fallback...");
     const response = await fetch("./data/mock-readings.json");
-    coconsole.warn("Mock data is empty or unavailable");
+    const data = await response.json();
+    
+    if (!data || data.length === 0) {
+      console.warn("Mock data is empty or unavailable");
       updateFirebaseStatus("noData");
       renderErrorState("No data available - please add test data to Firestore at: https://console.firebase.google.com/project/phytowatch/firestore");
       return;
     }
 
+    state.packets = data;
     updateFirebaseStatus("fallback");
     console.log(`Using mock data (${state.packets.length} readings)`);
     renderFromNextPacket();
@@ -113,10 +117,6 @@ async function loadMockDataAsFallback() {
   } catch (err) {
     console.error("Error loading mock data:", err);
     updateFirebaseStatus("noData");
-
-    renderFromNextPacket();
-    setInterval(renderFromNextPacket, UI_CONFIG.refreshMs);
-  } catch (err) {
     renderErrorState(err.message);
   }
 }
