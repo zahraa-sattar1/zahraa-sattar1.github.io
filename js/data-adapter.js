@@ -88,6 +88,7 @@ export function normalizeIncomingPacket(rawPacket) {
  * @param {*} v - Value to convert
  * @returns {number|null} Converted number or null if invalid
  */
+function safeNumber(v) {
   const n = Number(v);
   return Number.isFinite(n) ? n : null;
 }
