@@ -1,6 +1,18 @@
 export function normalizeIncomingPacket(rawPacket) {
+  // Handle both string and Date timestamps
+  let timestamp = rawPacket?.timestamp;
+  if (timestamp instanceof Date) {
+    timestamp = timestamp.toISOString();
+  } else if (!timestamp) {
+    timestamp = new Date().toISOString();
+  } else if (typeof timestamp === 'string') {
+    // Already a string, use as-is
+  } else {
+    timestamp = new Date().toISOString();
+  }
+
   return {
-    timestamp: rawPacket?.timestamp || new Date().toISOString(),
+    timestamp,
     connection: rawPacket?.connection || "offline",
     firmware: rawPacket?.firmware || "Unknown",
     gateway: rawPacket?.gateway || "Unknown",
