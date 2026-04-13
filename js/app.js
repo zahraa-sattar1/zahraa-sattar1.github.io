@@ -10,6 +10,7 @@ const state = {
 };
 
 const el = {
+  firebaseStatusBadge: document.getElementById("firebaseStatusBadge"),
   connectionBadge: document.getElementById("connectionBadge"),
   lastUpdate: document.getElementById("lastUpdate"),
   packetCount: document.getElementById("packetCount"),
@@ -37,15 +38,31 @@ const el = {
   }
 };
 
+function updateFirebaseStatus(status, message) {
+  const colors = {
+    connected: { bg: "#4CAF50", label: "🟢 Firebase Connected" },
+    fallback: { bg: "#FFA500", label: "🟠 Firebase Error / Using Mock Data" },
+    initializing: { bg: "#FFA500", label: "⏳ Initializing..." },
+    noData: { bg: "#f44336", label: "🔴 No Data Available" }
+  };
+  
+  const config = colors[status] || colors.initializing;
+  el.firebaseStatusBadge.textContent = config.label;
+  el.firebaseStatusBadge.style.background = config.bg;
+  console.log(`Firebase Status: ${config.label}`);
+}
+
 init();
 
 async function init() {
   try {
     // Try Firebase first
     console.log("Initializing Firestore connection...");
+    updateFirebaseStatus("initializing");
     
     // Use a default buoy ID or get from URL parameter
     const buoyId = new URLSearchParams(window.location.search).get("buoy") || "buoy-001";
+    console.log(`Looking for buoy: ${buoyId}`);
     
     // Subscribe to Firestore readings
     state.firebaseUnsubscribe = subscribeToReadings(buoyId, (firestoreData) => {
@@ -54,10 +71,12 @@ async function init() {
         state.packets = firestoreData;
         state.packetIndex = 0;
         state.useMockData = false;
-        console.log("Connected to Firestore");
+        console.log("✓ Connected to Firestore");
+        updateFirebaseStatus("connected");
         renderFromPacket(firestoreData[0]);
       } else if (!state.useMockData) {
         // Firebase has no data, try mock data
+        console.log("Firestore has no data for this buoy, checking for mock data...");
         loadMockDataAsFallback();
       }
     });
@@ -81,12 +100,19 @@ async function loadMockDataAsFallback() {
     state.useMockData = true;
     console.log("Loading mock data as fallback...");
     const response = await fetch("./data/mock-readings.json");
-    const raw = await response.json();
-    state.packets = Array.isArray(raw) ? raw : [];
-
-    if (state.packets.length === 0) {
-      throw new Error("No mock packets found");
+    coconsole.warn("Mock data is empty or unavailable");
+      updateFirebaseStatus("noData");
+      renderErrorState("No data available - please add test data to Firestore at: https://console.firebase.google.com/project/phytowatch/firestore");
+      return;
     }
+
+    updateFirebaseStatus("fallback");
+    console.log(`Using mock data (${state.packets.length} readings)`);
+    renderFromNextPacket();
+    setInterval(renderFromNextPacket, UI_CONFIG.refreshMs);
+  } catch (err) {
+    console.error("Error loading mock data:", err);
+    updateFirebaseStatus("noData");
 
     renderFromNextPacket();
     setInterval(renderFromNextPacket, UI_CONFIG.refreshMs);
