@@ -5,7 +5,9 @@
 firebase/functions/node_modules/
 firebase/functions/.env
 firebase/functions/.env.*
+firebase/service-account-key.json
 firebase-debug.log
+firebase/service-account-key.json
 
 # Local server temp
 _site/
