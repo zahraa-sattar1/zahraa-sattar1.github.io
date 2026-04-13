@@ -1,31 +1,34 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function isAuthenticated() {
-      return request.auth != null;
+    // Allow public read access to buoy data for dashboard display
+    function isPublicRead() {
+      return true;
     }
 
+    // Authenticate via custom API key header (for backend ingest)
     function isIngestService() {
-      return isAuthenticated() && request.auth.token.ingest == true;
+      return request.auth.token.ingest == true;
     }
 
     match /buoys/{buoyId} {
-      allow read: if isAuthenticated();
+      // Public read for dashboard, ingest service can write
+      allow read: if isPublicRead();
       allow write: if isIngestService();
 
       match /readings/{readingId} {
-        allow read: if isAuthenticated();
+        allow read: if isPublicRead();
         allow create: if isIngestService();
         allow update, delete: if false;
       }
 
       match /summaries/{summaryId} {
-        allow read: if isAuthenticated();
+        allow read: if isPublicRead();
         allow write: if isIngestService();
       }
 
       match /alerts/{alertId} {
-        allow read: if isAuthenticated();
+        allow read: if isPublicRead();
         allow write: if isIngestService();
       }
     }

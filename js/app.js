@@ -1,9 +1,12 @@
 import { UI_CONFIG } from "./config.js";
 import { normalizeIncomingPacket } from "./data-adapter.js";
+import { subscribeToReadings } from "./firestore-service.js";
 
 const state = {
   packetIndex: 0,
-  packets: []
+  packets: [],
+  useMockData: false,
+  firebaseUnsubscribe: null
 };
 
 const el = {
@@ -38,6 +41,45 @@ init();
 
 async function init() {
   try {
+    // Try Firebase first
+    console.log("Initializing Firestore connection...");
+    
+    // Use a default buoy ID or get from URL parameter
+    const buoyId = new URLSearchParams(window.location.search).get("buoy") || "buoy-001";
+    
+    // Subscribe to Firestore readings
+    state.firebaseUnsubscribe = subscribeToReadings(buoyId, (firestoreData) => {
+      if (firestoreData && firestoreData.length > 0) {
+        // Got Firebase data
+        state.packets = firestoreData;
+        state.packetIndex = 0;
+        state.useMockData = false;
+        console.log("Connected to Firestore");
+        renderFromPacket(firestoreData[0]);
+      } else if (!state.useMockData) {
+        // Firebase has no data, try mock data
+        loadMockDataAsFallback();
+      }
+    });
+
+    // Set a timeout to fall back to mock data if Firebase doesn't respond
+    setTimeout(() => {
+      if (state.packets.length === 0 && !state.useMockData) {
+        console.warn("Firebase timeout, falling back to mock data");
+        loadMockDataAsFallback();
+      }
+    }, 3000);
+
+  } catch (err) {
+    console.error("Firebase init error:", err);
+    loadMockDataAsFallback();
+  }
+}
+
+async function loadMockDataAsFallback() {
+  try {
+    state.useMockData = true;
+    console.log("Loading mock data as fallback...");
     const response = await fetch("./data/mock-readings.json");
     const raw = await response.json();
     state.packets = Array.isArray(raw) ? raw : [];
@@ -57,6 +99,10 @@ function renderFromNextPacket() {
   const rawPacket = state.packets[state.packetIndex % state.packets.length];
   state.packetIndex += 1;
 
+  renderFromPacket(rawPacket);
+}
+
+function renderFromPacket(rawPacket) {
   const packet = normalizeIncomingPacket(rawPacket);
   renderTopbar(packet);
   renderMetrics(packet);
@@ -137,3 +183,10 @@ function formatTime(iso) {
   const d = new Date(iso);
   return Number.isNaN(d.getTime()) ? "--" : d.toLocaleString();
 }
+
+// Cleanup on page unload
+window.addEventListener("beforeunload", () => {
+  if (state.firebaseUnsubscribe) {
+    state.firebaseUnsubscribe();
+  }
+});
