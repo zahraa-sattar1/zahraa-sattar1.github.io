@@ -111,48 +111,6 @@ export function subscribeToReadings(buoyId, callback) {
  *   buoys.forEach(b => console.log(b.name));
  * });
  */
-  try {
-    const buoyRef = collection(db, "buoys", buoyId, "readings");
-    const q = query(buoyRef, orderBy("timestamp", "desc"), limit(1));
-    
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      console.log(`[Firestore] Query result for ${buoyId}: ${snapshot.docs.length} documents`);
-      
-      if (!snapshot.empty) {
-        const doc = snapshot.docs[0];
-        const data = doc.data();
-        console.log("[Firestore] Raw data from Firebase:", data);
-        
-        // Properly convert Firestore Timestamp to JS Date
-        const timestamp = data.timestamp?.toDate?.() || data.timestamp || new Date();
-        const normalizedData = {
-          ...data,
-          id: doc.id,
-          timestamp: timestamp instanceof Date ? timestamp : new Date(timestamp)
-        };
-        
-        console.log("[Firestore] Normalized data:", normalizedData);
-        callback([normalizedData]);
-      } else {
-        console.log(`[Firestore] No readings found for buoy: ${buoyId}`);
-        callback([]);
-      }
-    }, (error) => {
-      console.error("[Firestore] Subscription error:", error);
-      callback([]);
-    });
-
-    return unsubscribe;
-  } catch (error) {
-    console.error("[Firestore] Error subscribing to readings:", error);
-    callback([]);
-    return () => {};
-  }
-}
-
-/**
- * Get all buoys metadata
- */
 export function subscribeToBuoys(callback) {
   try {
     const buoysRef = collection(db, "buoys");
