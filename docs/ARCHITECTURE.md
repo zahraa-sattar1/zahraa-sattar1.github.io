@@ -456,6 +456,66 @@ state = {
 }
 ```
 
+### 6. Bulk Upload Module (`js/bulk-upload.js`)
+
+**Purpose:** Import sensor logs from SD card as JSON files  
+**Responsibility:** Handle file upload, parsing, and batch Firestore writes
+
+**Key Functions:**
+
+#### `handleFile(file)` - Process uploaded JSON file
+- Validates JSON format
+- Checks for required fields (buoyId, readings array)
+- Initiates batch upload process
+
+**Accepted File Format:**
+```json
+{
+  "buoyId": "buoy-001",
+  "readings": [
+    {
+      "timestamp": "2024-04-01T08:00:00Z",
+      "temperature": 14.2,
+      "battery": 95,
+      "signal": -85,
+      "custom1": 40.5,
+      "packetCount": 1200,
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "dataRate": "9600bps",
+      "connection": "online"
+    },
+    ...
+  ]
+}
+```
+
+#### `uploadReadings(buoyId, readings)` - Batch upload to Firestore
+- Uploads in batches of 10 readings
+- Tracks success/error count
+- Shows progress bar
+- Converts various timestamp formats (ISO string, Unix timestamp, Firestore Timestamp)
+
+**Timestamp Formats Supported:**
+- ISO 8601 strings: `"2024-04-01T08:00:00Z"`
+- Unix timestamps (ms): `1711939200000`
+- Firestore Timestamp objects: `{toDate: function}`
+
+#### UI Components
+- **Upload Zone:** Clickable drag-and-drop area for file selection
+- **Status Display:** Real-time message and progress bar during upload
+- **Results Panel:** Success/failure summary with error details
+
+**Supports:**
+- Drag & drop file upload
+- Click to browse and select
+- Progress indicator (%)
+- Error reporting with line-by-line details
+- Expandable error details panel
+
+**Test File:** `test-data/bulk-logs-sample.json`
+Contains 15 sample readings from two days with realistic sensor values.
+
 ---
 
 ## Backend Cloud Functions
@@ -844,6 +904,38 @@ Expected response: `202 Accepted`
 7. Check status badge color matches status
 ```
 
+### 6. Bulk Upload Testing
+
+**Test with sample data file:**
+1. Download or use `test-data/bulk-logs-sample.json`
+2. Open dashboard and scroll to "Bulk Upload" panel
+3. Click upload zone or drag-drop the JSON file
+4. Verify progress bar appears
+5. Check success message shows "15/15 readings uploaded"
+6. Go to Firestore Console and verify readings in `buoys/buoy-001/readings`
+
+**Test error handling:**
+- Upload a non-JSON file → Should show "Please select a JSON file" error
+- Upload malformed JSON → Should show "Invalid JSON" error
+- Upload JSON without `buoyId` field → Should show format error
+- Upload JSON with empty readings array → Should show error
+
+**Check browser console:**
+```javascript
+// Filter for "[BulkUpload]" logs:
+[BulkUpload] Reading file: bulk-logs-sample.json...
+[BulkUpload] Parsed bulk-logs-sample.json, validating data...
+[BulkUpload] Found 15 readings. Starting upload...
+[BulkUpload] Success: 15/15 uploaded
+```
+
+**Verify in Firestore:**
+1. Go to [Firestore Console](https://console.firebase.google.com/project/phytowatch/firestore)
+2. Navigate to buoys → buoy-001 → readings
+3. Should see 15 new documents with timestamps from sample data
+4. Verify timestamps, sensor values are preserved
+5. Check `uploadedAt` field shows current server time
+
 ---
 
 ## Future Enhancements
@@ -901,8 +993,10 @@ Expected response: `202 Accepted`
 | `js/firebase-init.js` | Firebase setup |
 | `js/firestore-service.js` | Firestore subscriptions |
 | `js/data-adapter.js` | Data normalization |
+| `js/bulk-upload.js` | SD card log import |
 | `firebase/firestore.rules` | Security rules |
 | `firebase/functions/src/index.js` | Cloud Functions |
+| `test-data/bulk-logs-sample.json` | Sample bulk upload file |
 | `docs/ARCHITECTURE.md` | This file |
 
 ### Key URLs

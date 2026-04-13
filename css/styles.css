@@ -208,6 +208,123 @@ body {
   font-weight: 700;
 }
 
+/* Bulk Upload Styles */
+.bulk-upload-container {
+  margin-top: var(--space-3);
+}
+
+.upload-zone {
+  border: 2px dashed var(--accent);
+  border-radius: 12px;
+  padding: var(--space-5);
+  text-align: center;
+  background: rgba(15, 118, 110, 0.04);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.upload-zone:hover {
+  background: rgba(15, 118, 110, 0.08);
+  border-color: var(--accent);
+}
+
+.upload-zone.active {
+  background: rgba(15, 118, 110, 0.12);
+  border-color: var(--ok);
+}
+
+.upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+}
+
+.upload-icon {
+  font-size: 2.5rem;
+}
+
+.upload-text {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.upload-hint {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.upload-status {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border-radius: 10px;
+  background: rgba(6, 118, 71, 0.08);
+  border-left: 4px solid var(--ok);
+}
+
+.upload-status p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.progress-bar {
+  margin-top: var(--space-2);
+  height: 6px;
+  background: rgba(6, 118, 71, 0.2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--ok);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.upload-results {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border-radius: 10px;
+  background: rgba(15, 118, 110, 0.08);
+  border-left: 4px solid var(--accent);
+}
+
+.upload-results p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.upload-results.error {
+  background: rgba(180, 35, 24, 0.08);
+  border-left-color: var(--danger);
+}
+
+.upload-results.error p {
+  color: var(--danger);
+}
+
+#resultDetails {
+  margin-top: var(--space-2);
+  font-size: 0.8rem;
+}
+
+#resultDetails-content {
+  margin: var(--space-2) 0 0;
+  padding: var(--space-2);
+  background: rgba(26, 42, 34, 0.04);
+  border-radius: 8px;
+  overflow-x: auto;
+  max-height: 200px;
+  overflow-y: auto;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.75rem;
+}
+
 .footer {
   padding: var(--space-4);
   color: var(--ink-soft);
