@@ -1,1 +1,44 @@
-[]
+[
+  {
+    "timestamp": "2024-04-13T10:45:00Z",
+    "connection": "online",
+    "firmware": "v2.1.0",
+    "gateway": "gw-cape-town-01",
+    "packetCount": 1245,
+    "dataRate": "9600bps",
+    "readings": {
+      "temperature": 15.3,
+      "battery": 87,
+      "signal": -95,
+      "custom1": 42.1
+    }
+  },
+  {
+    "timestamp": "2024-04-13T10:44:00Z",
+    "connection": "online",
+    "firmware": "v2.1.0",
+    "gateway": "gw-cape-town-01",
+    "packetCount": 1244,
+    "dataRate": "9600bps",
+    "readings": {
+      "temperature": 15.2,
+      "battery": 87,
+      "signal": -93,
+      "custom1": 42.0
+    }
+  },
+  {
+    "timestamp": "2024-04-13T10:43:00Z",
+    "connection": "online",
+    "firmware": "v2.1.0",
+    "gateway": "gw-cape-town-01",
+    "packetCount": 1243,
+    "dataRate": "9600bps",
+    "readings": {
+      "temperature": 15.4,
+      "battery": 88,
+      "signal": -98,
+      "custom1": 42.2
+    }
+  }
+]

@@ -1,7 +1,46 @@
+/**
+ * @module app
+ * @description Main application controller for the buoy telemetry dashboard.
+ *
+ * Responsibilities:
+ * - Initialize Firestore connection and subscribe to real-time readings
+ * - Fall back to mock data with 3-second timeout if Firestore unavailable
+ * - Manage application state (current packet, connection status)
+ * - Render UI updates based on incoming telemetry
+ * - Generate threshold-based alerts (low battery, weak signal)
+ * - Format timestamps for display
+ * - Handle cleanup on page unload
+ *
+ * Architecture:
+ * ```
+ * Firebase Firestore
+ *         ↓
+ *   [Real-time subscription via firestore-service.js]
+ *         ↓
+ *   [normalize data via data-adapter.js]
+ *         ↓
+ *   [render UI functions]
+ * ```
+ *
+ * Error Handling:
+ * - Firebase init error → Fall back to mock data immediately
+ * - Firebase timeout (3s) → Fall back to mock data
+ * - Mock data load error → Show "No Data Available" message
+ * - No mock data → Show link to Firebase console to add data
+ */
+
 import { UI_CONFIG } from "./config.js";
 import { normalizeIncomingPacket } from "./data-adapter.js";
 import { subscribeToReadings } from "./firestore-service.js";
 
+/**
+ * Application state
+ * @type {Object}
+ * @property {number} packetIndex - Current position in packets array (for cycling)
+ * @property {Array} packets - Array of telemetry readings to display
+ * @property {boolean} useMockData - Whether currently using mock data vs Firebase
+ * @property {Function} firebaseUnsubscribe - Function to clean up Firestore subscription
+ */
 const state = {
   packetIndex: 0,
   packets: [],
