@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+
+# Firebase / Node
+firebase/functions/node_modules/
+firebase/functions/.env
+firebase/functions/.env.*
+firebase-debug.log
+
+# Local server temp
+_site/

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buoy Telemetry Dashboard</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="bg-shape bg-shape-a"></div>
+  <div class="bg-shape bg-shape-b"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <h1>Buoy zahraa Telemetry</h1>
+      <p class="subtitle">Remote Sensor Monitoring</p>
+    </div>
+    <div class="topbar-meta">
+      <span id="connectionBadge" class="badge offline">Offline</span>
+      <span id="lastUpdate">Last update: --</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="cards" aria-label="Key Metrics">
+      <article class="card metric-card" data-key="temperature">
+        <h2>Temperature</h2>
+        <p class="metric-value" id="temperatureValue">--</p>
+        <p class="metric-meta" id="temperatureMeta">No data</p>
+      </article>
+
+      <article class="card metric-card" data-key="battery">
+        <h2>Battery</h2>
+        <p class="metric-value" id="batteryValue">--</p>
+        <p class="metric-meta" id="batteryMeta">No data</p>
+      </article>
+
+      <article class="card metric-card" data-key="signal">
+        <h2>Signal</h2>
+        <p class="metric-value" id="signalValue">--</p>
+        <p class="metric-meta" id="signalMeta">No data</p>
+      </article>
+
+      <article class="card metric-card" data-key="custom1">
+        <h2>Custom Sensor</h2>
+        <p class="metric-value" id="custom1Value">--</p>
+        <p class="metric-meta" id="custom1Meta">No data</p>
+      </article>
+    </section>
+
+    <section class="panels">
+      <article class="card panel">
+        <div class="panel-header">
+          <h2>Trend View</h2>
+          <p>Chart placeholder until final schema is known</p>
+        </div>
+        <div class="chart-placeholder" role="img" aria-label="Telemetry trend placeholder">
+          <span>Chart area reserved</span>
+        </div>
+      </article>
+
+      <article class="card panel">
+        <div class="panel-header">
+          <h2>Alerts</h2>
+          <p>Threshold and system warnings</p>
+        </div>
+        <ul id="alertsList" class="alerts-list">
+          <li class="alert-item neutral">No alerts yet</li>
+        </ul>
+      </article>
+
+      <article class="card panel">
+        <div class="panel-header">
+          <h2>Device Health</h2>
+          <p>Connection and packet diagnostics</p>
+        </div>
+        <div class="health-grid">
+          <div>
+            <h3>Packet Count</h3>
+            <p id="packetCount">0</p>
+          </div>
+          <div>
+            <h3>Data Rate</h3>
+            <p id="dataRate">Unknown</p>
+          </div>
+          <div>
+            <h3>Firmware</h3>
+            <p id="firmware">Unknown</p>
+          </div>
+          <div>
+            <h3>Gateway</h3>
+            <p id="gateway">Unknown</p>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <small>Designed for uncertain sensor schemas, adaptable by configuration.</small>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
