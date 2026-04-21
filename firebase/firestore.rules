@@ -18,7 +18,9 @@ service cloud.firestore {
 
       match /readings/{readingId} {
         allow read: if isPublicRead();
-        allow create: if isIngestService();
+        // Allow bulk uploads from dashboard (unauthenticated browser writes)
+        // For production: implement authentication and/or Cloud Function validation
+        allow create: if isIngestService() || request.auth == null;
         allow update, delete: if false;
       }
 

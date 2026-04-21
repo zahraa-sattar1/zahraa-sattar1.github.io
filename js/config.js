@@ -11,6 +11,7 @@
  * @property {number} refreshMs - Dashboard update interval (ms) when using mock data
  * @property {Object} labels - Display labels for each metric
  * @property {Object} units - Unit labels for metric values
+ * @property {Object} descriptions - Detailed descriptions for each sensor
  * @property {Object} thresholds - Alert trigger thresholds
  */
 export const UI_CONFIG = {
@@ -24,20 +25,36 @@ export const UI_CONFIG = {
    * Display labels for each sensor metric
    */
   labels: {
-    temperature: "Temperature",
+    temperature: "Water Temperature",
+    par: "PAR (Photosynthetically Active Radiation)",
+    bbp: "Optical Backscatter (Turbidity)",
+    depth: "Depth",
     battery: "Battery",
-    signal: "Signal",
-    custom1: "Custom Sensor"
+    signal: "Signal Strength"
   },
 
   /**
    * Unit labels for displaying metric values
    */
   units: {
-    temperature: "deg C",
+    temperature: "°C",
+    par: "lx",
+    bbp: "m⁻¹",
+    depth: "m",
     battery: "%",
-    signal: "dBm",
-    custom1: "unit" // TODO: Replace with actual custom sensor unit
+    signal: "dBm"
+  },
+
+  /**
+   * Detailed sensor descriptions
+   */
+  descriptions: {
+    temperature: "Water temperature measured by LPS35HW pressure sensor",
+    par: "BH1750 - Photosynthetically Active Radiation (400-700 nm), 0-100m depth profile",
+    bbp: "TSL2591 + 850nm IR LED - Optical backscatter proxy for particulate concentration",
+    depth: "LPS35HW - Depth in meters (calculated from pressure via hydrostatic equation)",
+    battery: "System battery voltage percentage",
+    signal: "LoRa signal strength in dBm"
   },
 
   /**
@@ -46,5 +63,14 @@ export const UI_CONFIG = {
   thresholds: {
     batteryLow: 25, // Below 25% battery triggers warning
     signalWeak: -115 // Weaker than -115 dBm triggers warning
+  },
+
+  /**
+   * Graph configuration
+   */
+  graph: {
+    maxDataPoints: 24, // Keep last 24 readings for graphs
+    updateInterval: 2000 // Redraw graphs every 2 seconds
   }
 };
+

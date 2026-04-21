@@ -9,6 +9,7 @@
  * - Render UI updates based on incoming telemetry
  * - Generate threshold-based alerts (low battery, weak signal)
  * - Format timestamps for display
+ * - Update mini-charts with historical data
  * - Handle cleanup on page unload
  *
  * Architecture:
@@ -19,27 +20,18 @@
  *         ↓
  *   [normalize data via data-adapter.js]
  *         ↓
- *   [render UI functions]
+ *   [render UI functions + chart updates]
  * ```
- *
- * Error Handling:
- * - Firebase init error → Fall back to mock data immediately
- * - Firebase timeout (3s) → Fall back to mock data
- * - Mock data load error → Show "No Data Available" message
- * - No mock data → Show link to Firebase console to add data
  */
 
 import { UI_CONFIG } from "./config.js";
 import { normalizeIncomingPacket } from "./data-adapter.js";
 import { subscribeToReadings } from "./firestore-service.js";
+import { initializeCharts, updateCharts } from "./chart-manager.js";
 
 /**
  * Application state
  * @type {Object}
- * @property {number} packetIndex - Current position in packets array (for cycling)
- * @property {Array} packets - Array of telemetry readings to display
- * @property {boolean} useMockData - Whether currently using mock data vs Firebase
- * @property {Function} firebaseUnsubscribe - Function to clean up Firestore subscription
  */
 const state = {
   packetIndex: 0,
@@ -62,6 +54,18 @@ const el = {
       value: document.getElementById("temperatureValue"),
       meta: document.getElementById("temperatureMeta")
     },
+    par: {
+      value: document.getElementById("parValue"),
+      meta: document.getElementById("parMeta")
+    },
+    bbp: {
+      value: document.getElementById("bbpValue"),
+      meta: document.getElementById("bbpMeta")
+    },
+    depth: {
+      value: document.getElementById("depthValue"),
+      meta: document.getElementById("depthMeta")
+    },
     battery: {
       value: document.getElementById("batteryValue"),
       meta: document.getElementById("batteryMeta")
@@ -69,10 +73,6 @@ const el = {
     signal: {
       value: document.getElementById("signalValue"),
       meta: document.getElementById("signalMeta")
-    },
-    custom1: {
-      value: document.getElementById("custom1Value"),
-      meta: document.getElementById("custom1Meta")
     }
   }
 };
@@ -90,6 +90,11 @@ function updateFirebaseStatus(status, message) {
   el.firebaseStatusBadge.style.background = config.bg;
   console.log(`Firebase Status: ${config.label}`);
 }
+
+// Initialize charts on page load
+document.addEventListener('DOMContentLoaded', () => {
+  initializeCharts();
+});
 
 init();
 
@@ -173,6 +178,7 @@ function renderFromPacket(rawPacket) {
   renderMetrics(packet);
   renderHealth(packet);
   renderAlerts(packet);
+  updateCharts(packet.readings, packet.timestamp);
 }
 
 function renderTopbar(packet) {
@@ -183,19 +189,26 @@ function renderTopbar(packet) {
 }
 
 function renderMetrics(packet) {
-  Object.keys(el.metric).forEach((key) => {
+  const metrics = ['temperature', 'par', 'bbp', 'depth', 'battery', 'signal'];
+  
+  metrics.forEach((key) => {
     const value = packet.readings[key];
     const unit = UI_CONFIG.units[key] || "";
     const target = el.metric[key];
 
-    if (value === null) {
+    if (value === null || value === undefined) {
       target.value.textContent = "--";
       target.meta.textContent = "No data";
       return;
     }
 
-    target.value.textContent = `${value} ${unit}`.trim();
-    target.meta.textContent = `Sensor key: ${key}`;
+    // Format number to 1-2 decimal places for readability
+    const displayValue = typeof value === 'number' 
+      ? (Math.abs(value) > 100 ? value.toFixed(1) : value.toFixed(2))
+      : value;
+    
+    target.value.textContent = displayValue;
+    target.meta.textContent = UI_CONFIG.labels[key];
   });
 }
 
@@ -209,11 +222,11 @@ function renderHealth(packet) {
 function renderAlerts(packet) {
   const alerts = [];
 
-  if (packet.readings.battery !== null && packet.readings.battery <= UI_CONFIG.thresholds.batteryLow) {
+  if (packet.readings.battery !== null && packet.readings.battery !== undefined && packet.readings.battery <= UI_CONFIG.thresholds.batteryLow) {
     alerts.push({ level: "warning", text: `Low battery: ${packet.readings.battery}%` });
   }
 
-  if (packet.readings.signal !== null && packet.readings.signal <= UI_CONFIG.thresholds.signalWeak) {
+  if (packet.readings.signal !== null && packet.readings.signal !== undefined && packet.readings.signal <= UI_CONFIG.thresholds.signalWeak) {
     alerts.push({ level: "warning", text: `Weak signal: ${packet.readings.signal} dBm` });
   }
 
@@ -255,3 +268,4 @@ window.addEventListener("beforeunload", () => {
     state.firebaseUnsubscribe();
   }
 });
+

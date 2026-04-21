@@ -28,38 +28,89 @@
   <main class="layout">
     <section class="cards" aria-label="Key Metrics">
       <article class="card metric-card" data-key="temperature">
-        <h2>Temperature</h2>
+        <h2>Water Temperature</h2>
         <p class="metric-value" id="temperatureValue">--</p>
-        <p class="metric-meta" id="temperatureMeta">No data</p>
+        <p class="metric-unit">°C</p>
+        <div class="mini-chart-container">
+          <canvas id="temperatureChart" class="mini-chart"></canvas>
+        </div>
+        <p class="metric-meta" id="temperatureMeta">LPS35HW sensor</p>
+      </article>
+
+      <article class="card metric-card" data-key="par">
+        <h2>PAR (Visible Light)</h2>
+        <p class="metric-value" id="parValue">--</p>
+        <p class="metric-unit">lux</p>
+        <div class="mini-chart-container">
+          <canvas id="parChart" class="mini-chart"></canvas>
+        </div>
+        <p class="metric-meta" id="parMeta">BH1750 sensor (0-100m)</p>
+      </article>
+
+      <article class="card metric-card" data-key="bbp">
+        <h2>Optical Backscatter</h2>
+        <p class="metric-value" id="bbpValue">--</p>
+        <p class="metric-unit">m⁻¹</p>
+        <div class="mini-chart-container">
+          <canvas id="bbpChart" class="mini-chart"></canvas>
+        </div>
+        <p class="metric-meta" id="bbpMeta">TSL2591 + 850nm IR LED</p>
+      </article>
+
+      <article class="card metric-card" data-key="depth">
+        <h2>Depth</h2>
+        <p class="metric-value" id="depthValue">--</p>
+        <p class="metric-unit">m</p>
+        <div class="mini-chart-container">
+          <canvas id="depthChart" class="mini-chart"></canvas>
+        </div>
+        <p class="metric-meta" id="depthMeta">LPS35HW pressure sensor</p>
       </article>
 
       <article class="card metric-card" data-key="battery">
         <h2>Battery</h2>
         <p class="metric-value" id="batteryValue">--</p>
-        <p class="metric-meta" id="batteryMeta">No data</p>
+        <p class="metric-unit">%</p>
+        <div class="mini-chart-container">
+          <canvas id="batteryChart" class="mini-chart"></canvas>
+        </div>
+        <p class="metric-meta" id="batteryMeta">System power</p>
       </article>
 
       <article class="card metric-card" data-key="signal">
-        <h2>Signal</h2>
+        <h2>Signal Strength</h2>
         <p class="metric-value" id="signalValue">--</p>
-        <p class="metric-meta" id="signalMeta">No data</p>
-      </article>
-
-      <article class="card metric-card" data-key="custom1">
-        <h2>Custom Sensor</h2>
-        <p class="metric-value" id="custom1Value">--</p>
-        <p class="metric-meta" id="custom1Meta">No data</p>
+        <p class="metric-unit">dBm</p>
+        <div class="mini-chart-container">
+          <canvas id="signalChart" class="mini-chart"></canvas>
+        </div>
+        <p class="metric-meta" id="signalMeta">LoRa link quality</p>
       </article>
     </section>
 
     <section class="panels">
       <article class="card panel">
         <div class="panel-header">
-          <h2>Trend View</h2>
-          <p>Chart placeholder until final schema is known</p>
+          <h2>Sensor Information</h2>
+          <p>Data acquisition system details</p>
         </div>
-        <div class="chart-placeholder" role="img" aria-label="Telemetry trend placeholder">
-          <span>Chart area reserved</span>
+        <div class="sensor-info">
+          <div class="sensor-item">
+            <h3>BH1750</h3>
+            <p>PAR (Photosynthetically Active Radiation), measured in lux (lx), profiled through 0–100 m depth. Represents visible light intensity (400–700 nm) in the water column.</p>
+          </div>
+          <div class="sensor-item">
+            <h3>TSL2591 + 850nm IR LED</h3>
+            <p>Optical backscatter, measured in m⁻¹ (bbp). The IR LED emits at 850 nm and the TSL2591 detects the light scattered back by suspended particles — serves as a proxy for particulate concentration / turbidity.</p>
+          </div>
+          <div class="sensor-item">
+            <h3>Adafruit LPS35HW</h3>
+            <p>Pressure in hPa (mbar), converted to depth in metres (m) via hydrostatic pressure calculation. Also measures water temperature in °C.</p>
+          </div>
+          <div class="sensor-item">
+            <h3>Arduino Nano 33 IoT</h3>
+            <p>Microcontroller handling data acquisition from all sensors via I2C bus. Interfaces with LoRa transceiver for remote transmission.</p>
+          </div>
         </div>
       </article>
 
@@ -141,6 +192,7 @@
     <small>Designed for uncertain sensor schemas, adaptable by configuration.</small>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script type="module" src="js/firebase-init.js"></script>
   <script type="module" src="js/app.js"></script>
   <script type="module" src="js/bulk-upload.js"></script>

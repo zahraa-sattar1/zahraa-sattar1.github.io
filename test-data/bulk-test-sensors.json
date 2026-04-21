@@ -1,0 +1,328 @@
+{
+  "buoyId": "buoy-001",
+  "readings": [
+    {
+      "timestamp": "2024-04-20T08:00:00Z",
+      "connection": "online",
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 2500,
+      "dataRate": "9600bps",
+      "readings": {
+        "temperature": 14.2,
+        "par": 650.5,
+        "bbp": 0.0142,
+        "pressure": 1234.6,
+        "depth": 22.1,
+        "battery": 95,
+        "signal": -85
+      }
+    },
+    {
+      "timestamp": "2024-04-20T09:00:00Z",
+      "connection": "online",
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 2501,
+      "dataRate": "9600bps",
+      "readings": {
+        "temperature": 14.5,
+        "par": 720.3,
+        "bbp": 0.0145,
+        "pressure": 1236.8,
+        "depth": 22.3,
+        "battery": 94,
+        "signal": -87
+      }
+    },
+    {
+      "timestamp": "2024-04-20T10:00:00Z",
+      "connection": "online",
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 2502,
+      "dataRate": "9600bps",
+      "readings": {
+        "temperature": 14.8,
+        "par": 890.7,
+        "bbp": 0.0148,
+        "pressure": 1238.9,
+        "depth": 22.5,
+        "battery": 93,
+        "signal": -89
+      }
+    },
+    {
+      "timestamp": "2024-04-20T11:00:00Z",
+      "connection": "online",
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 2503,
+      "dataRate": "9600bps",
+      "readings": {
+        "temperature": 15.1,
+        "par": 950.2,
+        "bbp": 0.0151,
+        "pressure": 1241.0,
+        "depth": 22.8,
+        "battery": 92,
+        "signal": -92
+      }
+    },
+    {
+      "timestamp": "2024-04-20T12:00:00Z",
+      "connection": "online",
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 2504,
+      "dataRate": "9600bps",
+      "readings": {
+        "temperature": 15.4,
+        "par": 1050.8,
+        "bbp": 0.0154,
+        "pressure": 1244.1,
+        "depth": 23.1,
+        "battery": 91,
+        "signal": -94
+      }
+    },
+    {
+      "timestamp": "2024-04-20T13:00:00Z",
+      "connection": "online",
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 2505,
+      "dataRate": "9600bps",
+      "readings": {
+        "temperature": 15.7,
+        "par": 1120.5,
+        "bbp": 0.0157,
+        "pressure": 1247.0,
+        "depth": 23.4,
+        "battery": 90,
+        "signal": -96
+      }
+    },
+    {
+      "timestamp": "2024-04-20T14:00:00Z",
+      "connection": "online",
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 2506,
+      "dataRate": "9600bps",
+      "readings": {
+        "temperature": 16.0,
+        "par": 1200.1,
+        "bbp": 0.0160,
+        "pressure": 1250.0,
+        "depth": 23.7,
+        "battery": 88,
+        "signal": -98
+      }
+    },
+    {
+      "timestamp": "2024-04-20T15:00:00Z",
+      "connection": "online",
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 2507,
+      "dataRate": "9600bps",
+      "readings": {
+        "temperature": 16.2,
+        "par": 1150.3,
+        "bbp": 0.0162,
+        "pressure": 1252.1,
+        "depth": 23.9,
+        "battery": 87,
+        "signal": -100
+      }
+    },
+    {
+      "timestamp": "2024-04-20T16:00:00Z",
+      "connection": "online",
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 2508,
+      "dataRate": "9600bps",
+      "readings": {
+        "temperature": 16.5,
+        "par": 1080.7,
+        "bbp": 0.0165,
+        "pressure": 1255.2,
+        "depth": 24.2,
+        "battery": 86,
+        "signal": -102
+      }
+    },
+    {
+      "timestamp": "2024-04-20T17:00:00Z",
+      "connection": "online",
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 2509,
+      "dataRate": "9600bps",
+      "readings": {
+        "temperature": 16.7,
+        "par": 920.4,
+        "bbp": 0.0168,
+        "pressure": 1258.5,
+        "depth": 24.5,
+        "battery": 85,
+        "signal": -104
+      }
+    },
+    {
+      "timestamp": "2024-04-20T18:00:00Z",
+      "connection": "online",
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 2510,
+      "dataRate": "9600bps",
+      "readings": {
+        "temperature": 16.3,
+        "par": 750.6,
+        "bbp": 0.0163,
+        "pressure": 1254.0,
+        "depth": 24.1,
+        "battery": 84,
+        "signal": -106
+      }
+    },
+    {
+      "timestamp": "2024-04-21T08:00:00Z",
+      "connection": "online",
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 2511,
+      "dataRate": "9600bps",
+      "readings": {
+        "temperature": 14.9,
+        "par": 680.2,
+        "bbp": 0.0149,
+        "pressure": 1239.4,
+        "depth": 22.8,
+        "battery": 80,
+        "signal": -88
+      }
+    },
+    {
+      "timestamp": "2024-04-21T09:00:00Z",
+      "connection": "online",
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 2512,
+      "dataRate": "9600bps",
+      "readings": {
+        "temperature": 15.2,
+        "par": 800.5,
+        "bbp": 0.0152,
+        "pressure": 1241.8,
+        "depth": 23.1,
+        "battery": 79,
+        "signal": -90
+      }
+    },
+    {
+      "timestamp": "2024-04-21T10:00:00Z",
+      "connection": "online",
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 2513,
+      "dataRate": "9600bps",
+      "readings": {
+        "temperature": 15.5,
+        "par": 920.8,
+        "bbp": 0.0155,
+        "pressure": 1244.2,
+        "depth": 23.4,
+        "battery": 78,
+        "signal": -92
+      }
+    },
+    {
+      "timestamp": "2024-04-21T11:00:00Z",
+      "connection": "online",
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 2514,
+      "dataRate": "9600bps",
+      "readings": {
+        "temperature": 15.8,
+        "par": 1050.3,
+        "bbp": 0.0158,
+        "pressure": 1246.9,
+        "depth": 23.7,
+        "battery": 77,
+        "signal": -94
+      }
+    },
+    {
+      "timestamp": "2024-04-21T12:00:00Z",
+      "connection": "online",
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 2515,
+      "dataRate": "9600bps",
+      "readings": {
+        "temperature": 16.1,
+        "par": 1180.7,
+        "bbp": 0.0161,
+        "pressure": 1249.8,
+        "depth": 24.0,
+        "battery": 76,
+        "signal": -96
+      }
+    },
+    {
+      "timestamp": "2024-04-21T13:00:00Z",
+      "connection": "online",
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 2516,
+      "dataRate": "9600bps",
+      "readings": {
+        "temperature": 16.4,
+        "par": 1250.2,
+        "bbp": 0.0164,
+        "pressure": 1252.6,
+        "depth": 24.3,
+        "battery": 75,
+        "signal": -98
+      }
+    },
+    {
+      "timestamp": "2024-04-21T14:00:00Z",
+      "connection": "online",
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 2517,
+      "dataRate": "9600bps",
+      "readings": {
+        "temperature": 16.6,
+        "par": 1180.4,
+        "bbp": 0.0166,
+        "pressure": 1254.8,
+        "depth": 24.5,
+        "battery": 74,
+        "signal": -100
+      }
+    },
+    {
+      "timestamp": "2024-04-21T15:00:00Z",
+      "connection": "online",
+      "firmware": "v2.1.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 2518,
+      "dataRate": "9600bps",
+      "readings": {
+        "temperature": 15.3,
+        "par": 850.5,
+        "bbp": 0.0156,
+        "pressure": 1260.9,
+        "depth": 25.3,
+        "battery": 87,
+        "signal": -95
+      }
+    }
+  ]
+}

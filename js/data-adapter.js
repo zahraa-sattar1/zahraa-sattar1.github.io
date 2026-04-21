@@ -20,10 +20,12 @@
  * @param {string|Date|Object} rawPacket.timestamp - Reading timestamp
  * @param {string} [rawPacket.connection="offline"] - Connection status: "online" or "offline"
  * @param {Object} [rawPacket.readings] - Sensor readings object
- * @param {number} [rawPacket.readings.temperature] - Temperature in °C
+ * @param {number} [rawPacket.readings.temperature] - Water temperature in °C (LPS35HW)
+ * @param {number} [rawPacket.readings.par] - PAR in lux (BH1750)
+ * @param {number} [rawPacket.readings.bbp] - Optical backscatter in m⁻¹ (TSL2591 + 850nm IR)
+ * @param {number} [rawPacket.readings.depth] - Depth in meters (LPS35HW)
  * @param {number} [rawPacket.readings.battery] - Battery percentage (0-100)
  * @param {number} [rawPacket.readings.signal] - Signal strength in dBm (negative)
- * @param {number} [rawPacket.readings.custom1] - Custom sensor value
  * @param {number} [rawPacket.packetCount] - Sequential packet counter
  * @param {string} [rawPacket.firmware="Unknown"] - Firmware version
  * @param {string} [rawPacket.gateway="Unknown"] - Gateway identifier
@@ -40,11 +42,11 @@
  *
  * @example
  * // From Firestore
- * const doc = { timestamp: firestoreTimestamp(...), readings: { temperature: 15.5 } };
+ * const doc = { timestamp: firestoreTimestamp(...), readings: { temperature: 15.5, par: 850 } };
  * const normalized = normalizeIncomingPacket(doc);
  *
  * // From mock data (JSON)
- * const mock = { timestamp: "2024-01-01T12:00:00Z", readings: { temperature: 15.5 } };
+ * const mock = { timestamp: "2024-01-01T12:00:00Z", readings: { temperature: 15.5, par: 850 } };
  * const normalized = normalizeIncomingPacket(mock);
  */
 export function normalizeIncomingPacket(rawPacket) {
@@ -64,6 +66,13 @@ export function normalizeIncomingPacket(rawPacket) {
     timestamp = new Date().toISOString();
   }
 
+  const temperature = resolveReading(rawPacket, "temperature");
+  const par = resolveReading(rawPacket, "par", "bh1750");
+  const bbp = resolveReading(rawPacket, "bbp", "tsl2591", "opticalBackscatter");
+  const depth = resolveReading(rawPacket, "depth");
+  const pressure = resolveReading(rawPacket, "pressure", "pressureHpa", "pressureMbar");
+  const derivedDepth = depth ?? pressureToDepthMetres(pressure);
+
   return {
     timestamp,
     connection: rawPacket?.connection || "offline",
@@ -72,10 +81,13 @@ export function normalizeIncomingPacket(rawPacket) {
     packetCount: safeNumber(rawPacket?.packetCount) || 0,
     dataRate: rawPacket?.dataRate || "Unknown",
     readings: {
-      temperature: safeNumber(rawPacket?.readings?.temperature) ?? safeNumber(rawPacket?.temperature),
-      battery: safeNumber(rawPacket?.readings?.battery) ?? safeNumber(rawPacket?.battery),
-      signal: safeNumber(rawPacket?.readings?.signal) ?? safeNumber(rawPacket?.signal),
-      custom1: safeNumber(rawPacket?.readings?.custom1) ?? safeNumber(rawPacket?.custom1)
+      temperature,
+      par,
+      bbp,
+      depth: derivedDepth,
+      pressure,
+      battery: resolveReading(rawPacket, "battery"),
+      signal: resolveReading(rawPacket, "signal")
     }
   };
 }
@@ -92,3 +104,40 @@ function safeNumber(v) {
   const n = Number(v);
   return Number.isFinite(n) ? n : null;
 }
+
+function resolveReading(rawPacket, key, ...aliases) {
+  const sources = [
+    rawPacket?.readings?.[key],
+    rawPacket?.[key],
+    ...aliases.flatMap((alias) => [rawPacket?.readings?.[alias], rawPacket?.[alias]])
+  ];
+
+  for (const value of sources) {
+    const numberValue = safeNumber(value);
+    if (numberValue !== null) {
+      return numberValue;
+    }
+  }
+
+  return null;
+}
+
+function pressureToDepthMetres(pressureHpa) {
+  if (pressureHpa === null || pressureHpa === undefined) {
+    return null;
+  }
+
+  const absolutePressure = safeNumber(pressureHpa);
+  if (absolutePressure === null) {
+    return null;
+  }
+
+  const seaLevelPressureHpa = 1013.25;
+  const seawaterDensityKgPerM3 = 1025;
+  const gravityMs2 = 9.80665;
+  const pascalsPerHpa = 100;
+  const gaugePressurePa = Math.max((absolutePressure - seaLevelPressureHpa) * pascalsPerHpa, 0);
+
+  return gaugePressurePa / (seawaterDensityKgPerM3 * gravityMs2);
+}
+
