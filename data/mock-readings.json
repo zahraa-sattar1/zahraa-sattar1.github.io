@@ -7,12 +7,11 @@
     "packetCount": 1245,
     "dataRate": "9600bps",
     "readings": {
-      "temperature": 15.3,
       "par": 850.5,
       "bbp": 0.0156,
-      "depth": 25.3,
-      "battery": 87,
-      "signal": -95
+      "pressure": 1263.4,
+      "temperature": 15.3,
+      "battery": 87
     }
   },
   {
@@ -23,12 +22,11 @@
     "packetCount": 1244,
     "dataRate": "9600bps",
     "readings": {
-      "temperature": 15.2,
       "par": 820.3,
       "bbp": 0.0154,
-      "depth": 25.1,
-      "battery": 87,
-      "signal": -93
+      "pressure": 1261.1,
+      "temperature": 15.2,
+      "battery": 87
     }
   },
   {
@@ -39,12 +37,11 @@
     "packetCount": 1243,
     "dataRate": "9600bps",
     "readings": {
-      "temperature": 15.4,
       "par": 880.7,
       "bbp": 0.0158,
-      "depth": 25.5,
-      "battery": 88,
-      "signal": -98
+      "pressure": 1264.8,
+      "temperature": 15.4,
+      "battery": 88
     }
   },
   {
@@ -55,12 +52,11 @@
     "packetCount": 1242,
     "dataRate": "9600bps",
     "readings": {
-      "temperature": 15.1,
       "par": 810.2,
       "bbp": 0.0155,
-      "depth": 24.9,
-      "battery": 86,
-      "signal": -96
+      "pressure": 1260.2,
+      "temperature": 15.1,
+      "battery": 86
     }
   },
   {
@@ -71,12 +67,11 @@
     "packetCount": 1241,
     "dataRate": "9600bps",
     "readings": {
-      "temperature": 15.5,
       "par": 900.1,
       "bbp": 0.0159,
-      "depth": 25.7,
-      "battery": 88,
-      "signal": -94
+      "pressure": 1265.3,
+      "temperature": 15.5,
+      "battery": 88
     }
   },
   {
@@ -87,12 +82,11 @@
     "packetCount": 1240,
     "dataRate": "9600bps",
     "readings": {
-      "temperature": 15.0,
       "par": 795.4,
       "bbp": 0.0152,
-      "depth": 24.8,
-      "battery": 87,
-      "signal": -97
+      "pressure": 1259.7,
+      "temperature": 15.0,
+      "battery": 87
     }
   }
 ]

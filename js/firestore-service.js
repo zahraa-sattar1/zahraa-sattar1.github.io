@@ -9,6 +9,8 @@
 
 import { db, collection, query, orderBy, limit, onSnapshot } from "./firebase-init.js";
 
+const FIRESTORE_HISTORY_LIMIT = 36;
+
 /**
  * Subscribe to the latest reading for a specific buoy in real-time.
  *
@@ -47,26 +49,25 @@ import { db, collection, query, orderBy, limit, onSnapshot } from "./firebase-in
 export function subscribeToReadings(buoyId, callback) {
   try {
     const buoyRef = collection(db, "buoys", buoyId, "readings");
-    const q = query(buoyRef, orderBy("timestamp", "desc"), limit(1));
+    const q = query(buoyRef, orderBy("timestamp", "desc"), limit(FIRESTORE_HISTORY_LIMIT));
     
     const unsubscribe = onSnapshot(q, (snapshot) => {
       console.log(`[Firestore] Query result for ${buoyId}: ${snapshot.docs.length} documents`);
       
       if (!snapshot.empty) {
-        const doc = snapshot.docs[0];
-        const data = doc.data();
-        console.log("[Firestore] Raw data from Firebase:", data);
-        
-        // Properly convert Firestore Timestamp to JS Date
-        const timestamp = data.timestamp?.toDate?.() || data.timestamp || new Date();
-        const normalizedData = {
-          ...data,
-          id: doc.id,
-          timestamp: timestamp instanceof Date ? timestamp : new Date(timestamp)
-        };
-        
-        console.log("[Firestore] Normalized data:", normalizedData);
-        callback([normalizedData]);
+        const normalizedData = snapshot.docs.map((doc) => {
+          const data = doc.data();
+          const timestamp = data.timestamp?.toDate?.() || data.timestamp || new Date();
+
+          return {
+            ...data,
+            id: doc.id,
+            timestamp: timestamp instanceof Date ? timestamp : new Date(timestamp)
+          };
+        });
+
+        console.log(`[Firestore] Normalized ${normalizedData.length} readings from Firebase`);
+        callback(normalizedData);
       } else {
         console.log(`[Firestore] No readings found for buoy: ${buoyId}`);
         callback([]);

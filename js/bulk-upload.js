@@ -26,9 +26,6 @@ function initBulkUpload() {
   const fileInput = document.getElementById("fileInput");
   const uploadZone = document.getElementById("uploadZone");
 
-  // Click to upload
-  uploadZone.addEventListener("click", () => fileInput.click());
-
   // File selection
   fileInput.addEventListener("change", handleFileSelect);
 

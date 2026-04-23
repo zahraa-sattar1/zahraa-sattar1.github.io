@@ -19,9 +19,9 @@ Simply visit the live site above. The dashboard will:
 git clone https://github.com/zahraa-sattar1/zahraa-sattar1.github.io
 cd zahraa-sattar1.github.io
 
-# Open in browser
-open index.html  # macOS
-# or manually open: file:///path/to/index.html
+# Serve with a simple static server (recommended)
+python3 -m http.server 8080
+# then open http://localhost:8080
 ```
 
 **No build process required** - it's a static site with Firebase SDK loaded from CDN.

@@ -1,0 +1,110 @@
+{
+  "buoyId": "buoy-001",
+  "readings": [
+    {
+      "timestamp": "2024-04-22T08:00:00Z",
+      "connection": "online",
+      "firmware": "v2.2.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 3001,
+      "dataRate": "9600bps",
+      "readings": {
+        "par": 640.2,
+        "bbp": 0.0141,
+        "pressure": 1233.8,
+        "temperature": 14.1,
+        "battery": 96
+      }
+    },
+    {
+      "timestamp": "2024-04-22T09:00:00Z",
+      "connection": "online",
+      "firmware": "v2.2.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 3002,
+      "dataRate": "9600bps",
+      "readings": {
+        "par": 712.5,
+        "bbp": 0.0144,
+        "pressure": 1235.1,
+        "temperature": 14.4,
+        "battery": 95
+      }
+    },
+    {
+      "timestamp": "2024-04-22T10:00:00Z",
+      "connection": "online",
+      "firmware": "v2.2.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 3003,
+      "dataRate": "9600bps",
+      "readings": {
+        "par": 845.9,
+        "bbp": 0.0149,
+        "pressure": 1237.6,
+        "temperature": 14.8,
+        "battery": 94
+      }
+    },
+    {
+      "timestamp": "2024-04-22T11:00:00Z",
+      "connection": "online",
+      "firmware": "v2.2.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 3004,
+      "dataRate": "9600bps",
+      "readings": {
+        "par": 910.4,
+        "bbp": 0.0152,
+        "pressure": 1240.2,
+        "temperature": 15.0,
+        "battery": 93
+      }
+    },
+    {
+      "timestamp": "2024-04-22T12:00:00Z",
+      "connection": "online",
+      "firmware": "v2.2.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 3005,
+      "dataRate": "9600bps",
+      "readings": {
+        "par": 1002.8,
+        "bbp": 0.0155,
+        "pressure": 1243.0,
+        "temperature": 15.3,
+        "battery": 92
+      }
+    },
+    {
+      "timestamp": "2024-04-22T13:00:00Z",
+      "connection": "online",
+      "firmware": "v2.2.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 3006,
+      "dataRate": "9600bps",
+      "readings": {
+        "par": 1065.7,
+        "bbp": 0.0158,
+        "pressure": 1245.7,
+        "temperature": 15.6,
+        "battery": 91
+      }
+    },
+    {
+      "timestamp": "2024-04-22T14:00:00Z",
+      "connection": "online",
+      "firmware": "v2.2.0",
+      "gateway": "gw-cape-town-01",
+      "packetCount": 3007,
+      "dataRate": "9600bps",
+      "readings": {
+        "par": 1110.1,
+        "bbp": 0.0161,
+        "pressure": 1248.4,
+        "temperature": 15.9,
+        "battery": 90
+      }
+    }
+  ]
+}

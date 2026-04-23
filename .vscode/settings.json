@@ -1,5 +1,15 @@
 {
     "chat.tools.terminal.autoApprove": {
         "git push": true
-    }
+    },
+    "liveServer.settings.wait": 1500,
+    "liveServer.settings.ignoreFiles": [
+        "**/.git/**",
+        "**/.vscode/**",
+        "**/node_modules/**",
+        "**/firebase/**",
+        "**/docs/**",
+        "**/test-data/**",
+        "**/*.json"
+    ]
 }

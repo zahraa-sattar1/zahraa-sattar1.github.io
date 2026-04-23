@@ -29,6 +29,7 @@ export const UI_CONFIG = {
     par: "PAR (Photosynthetically Active Radiation)",
     bbp: "Optical Backscatter (Turbidity)",
     depth: "Depth",
+    pressure: "Pressure",
     battery: "Battery",
     signal: "Signal Strength"
   },
@@ -41,6 +42,7 @@ export const UI_CONFIG = {
     par: "lx",
     bbp: "m⁻¹",
     depth: "m",
+    pressure: "hPa",
     battery: "%",
     signal: "dBm"
   },
@@ -53,6 +55,7 @@ export const UI_CONFIG = {
     par: "BH1750 - Photosynthetically Active Radiation (400-700 nm), 0-100m depth profile",
     bbp: "TSL2591 + 850nm IR LED - Optical backscatter proxy for particulate concentration",
     depth: "LPS35HW - Depth in meters (calculated from pressure via hydrostatic equation)",
+    pressure: "Adafruit LPS35HW - Water pressure in hPa/mbar before depth conversion",
     battery: "System battery voltage percentage",
     signal: "LoRa signal strength in dBm"
   },

@@ -113,7 +113,7 @@ body {
 .cards {
   display: grid;
   gap: var(--space-3);
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
 .card {
@@ -125,41 +125,283 @@ body {
   animation: riseIn 450ms ease both;
 }
 
+.metric-card--interactive {
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.metric-card--interactive:hover,
+.metric-card--interactive:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 35px rgba(10, 30, 50, 0.12);
+  border-color: rgba(15, 90, 143, 0.2);
+  outline: none;
+}
+
+.metric-card-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.metric-card-hint {
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding-top: 0.15rem;
+  white-space: nowrap;
+}
+
 .metric-card h2,
 .panel h2 {
   margin: 0 0 var(--space-2);
   font-size: 1rem;
 }
 
+.metric-label {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
 .metric-value {
   font-family: var(--font-display);
-  margin: 0;
+  margin: 0.25rem 0 0;
   font-size: clamp(1.5rem, 5vw, 2.2rem);
   font-weight: 800;
   line-height: 1;
 }
 
 .metric-unit {
-  margin: 0.2rem 0 var(--space-2);
+  margin: 0.25rem 0 var(--space-2);
   color: var(--ink-soft);
   font-size: 0.85rem;
   font-weight: 500;
 }
 
 .mini-chart-container {
-  margin: var(--space-2) 0;
-  height: 60px;
+  margin: var(--space-2) 0 0;
+  height: 72px;
   position: relative;
 }
 
 .mini-chart {
-  max-height: 60px !important;
+  max-height: 72px !important;
 }
 
 .metric-meta {
   margin: var(--space-2) 0 0;
   color: var(--ink-soft);
   font-size: 0.8rem;
+}
+
+.measurement-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: none;
+}
+
+.measurement-modal.is-open {
+  display: block;
+}
+
+.measurement-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(11, 22, 34, 0.62);
+  backdrop-filter: blur(8px);
+}
+
+.measurement-modal__dialog {
+  position: relative;
+  z-index: 1;
+  width: min(980px, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+  margin: 1rem auto;
+  background: linear-gradient(180deg, rgba(252, 253, 251, 0.98), rgba(248, 251, 254, 0.98));
+  border: 1px solid rgba(15, 90, 143, 0.14);
+  border-radius: 24px;
+  box-shadow: 0 30px 90px rgba(10, 30, 50, 0.3);
+  padding: clamp(1rem, 2vw, 1.5rem);
+}
+
+.measurement-modal__close {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(15, 90, 143, 0.1);
+  color: var(--ink);
+  font-size: 1.4rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.measurement-modal__header {
+  padding-right: 3rem;
+  margin-bottom: 1rem;
+}
+
+.measurement-modal__kicker {
+  margin: 0 0 0.35rem;
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.measurement-modal__header h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 2.1rem);
+}
+
+.measurement-modal__summary {
+  margin: 0.4rem 0 0;
+  color: var(--ink-soft);
+}
+
+.measurement-modal__filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 0.8rem;
+  margin-bottom: 0.9rem;
+  align-items: end;
+}
+
+.measurement-modal__filter-field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.measurement-modal__filter-field span {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.measurement-modal__filter-field input {
+  border: 1px solid rgba(15, 90, 143, 0.24);
+  border-radius: 10px;
+  padding: 0.55rem 0.65rem;
+  font: inherit;
+  color: var(--ink);
+  background: #fff;
+}
+
+.measurement-modal__filter-actions {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.measurement-modal__filter-actions button {
+  border: 0;
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--accent);
+  color: #fff;
+}
+
+.measurement-modal__filter-actions button.secondary {
+  background: rgba(15, 90, 143, 0.14);
+  color: var(--ink);
+}
+
+.measurement-modal__chart-wrap {
+  height: min(55vh, 420px);
+  min-height: 280px;
+}
+
+.measurement-modal__list {
+  margin-top: 1rem;
+  border: 1px solid rgba(15, 90, 143, 0.16);
+  border-radius: 12px;
+  background: rgba(15, 90, 143, 0.04);
+}
+
+.measurement-modal__list h3 {
+  margin: 0;
+  padding: 0.7rem 0.85rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(15, 90, 143, 0.12);
+}
+
+#measurementReadingList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.measurement-reading-item {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid rgba(15, 90, 143, 0.08);
+  padding: 0.65rem 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.65rem;
+  align-items: center;
+  text-align: left;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  color: var(--ink);
+}
+
+.measurement-reading-item:hover,
+.measurement-reading-item:focus-visible {
+  background: rgba(15, 90, 143, 0.08);
+  outline: none;
+}
+
+.measurement-reading-item.active {
+  background: rgba(15, 90, 143, 0.14);
+}
+
+.measurement-reading-time {
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+}
+
+.measurement-reading-value {
+  font-weight: 700;
+}
+
+.measurement-reading-empty {
+  padding: 0.8rem 0.85rem;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.measurement-modal__point {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  background: rgba(15, 90, 143, 0.06);
+  border: 1px solid rgba(15, 90, 143, 0.1);
+  color: var(--ink);
+  line-height: 1.5;
+  white-space: pre-line;
 }
 
 .panels {
@@ -171,32 +413,6 @@ body {
   margin: 0;
   color: var(--ink-soft);
   font-size: 0.9rem;
-}
-
-.sensor-info {
-  margin-top: var(--space-3);
-  display: grid;
-  gap: var(--space-3);
-}
-
-.sensor-item {
-  padding: var(--space-3);
-  background: rgba(15, 90, 143, 0.04);
-  border-radius: 10px;
-  border-left: 3px solid var(--accent);
-}
-
-.sensor-item h3 {
-  margin: 0 0 var(--space-1);
-  font-size: 0.95rem;
-  color: var(--ink);
-}
-
-.sensor-item p {
-  margin: 0;
-  color: var(--ink-soft);
-  font-size: 0.85rem;
-  line-height: 1.5;
 }
 
 .chart-placeholder {
@@ -388,5 +604,28 @@ body {
 
   .panels .panel:last-child {
     grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .metric-card-header {
+    flex-direction: column;
+  }
+
+  .measurement-modal__dialog {
+    width: calc(100vw - 1rem);
+    margin: 0.5rem auto;
+  }
+
+  .measurement-modal__filters {
+    grid-template-columns: 1fr;
+  }
+
+  .measurement-modal__filter-actions {
+    justify-content: flex-start;
+  }
+
+  .measurement-modal__chart-wrap {
+    min-height: 240px;
   }
 }

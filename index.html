@@ -27,93 +27,78 @@
 
   <main class="layout">
     <section class="cards" aria-label="Key Metrics">
-      <article class="card metric-card" data-key="temperature">
-        <h2>Water Temperature</h2>
-        <p class="metric-value" id="temperatureValue">--</p>
-        <p class="metric-unit">°C</p>
-        <div class="mini-chart-container">
-          <canvas id="temperatureChart" class="mini-chart"></canvas>
+      <article class="card metric-card metric-card--interactive" data-key="par" tabindex="0" role="button" aria-label="Open detailed graph for PAR">
+        <div class="metric-card-header">
+          <h2>PAR (BH1750)</h2>
+          <span class="metric-card-hint">Tap to enlarge</span>
         </div>
-        <p class="metric-meta" id="temperatureMeta">LPS35HW sensor</p>
-      </article>
-
-      <article class="card metric-card" data-key="par">
-        <h2>PAR (Visible Light)</h2>
+        <p class="metric-label">Latest reading</p>
         <p class="metric-value" id="parValue">--</p>
         <p class="metric-unit">lux</p>
+        <p class="metric-meta" id="parMeta">Last reading time: --</p>
         <div class="mini-chart-container">
           <canvas id="parChart" class="mini-chart"></canvas>
         </div>
-        <p class="metric-meta" id="parMeta">BH1750 sensor (0-100m)</p>
       </article>
 
-      <article class="card metric-card" data-key="bbp">
-        <h2>Optical Backscatter</h2>
+      <article class="card metric-card metric-card--interactive" data-key="bbp" tabindex="0" role="button" aria-label="Open detailed graph for optical backscatter">
+        <div class="metric-card-header">
+          <h2>Optical Backscatter</h2>
+          <span class="metric-card-hint">Tap to enlarge</span>
+        </div>
+        <p class="metric-label">Latest reading</p>
         <p class="metric-value" id="bbpValue">--</p>
         <p class="metric-unit">m⁻¹</p>
+        <p class="metric-meta" id="bbpMeta">Last reading time: --</p>
         <div class="mini-chart-container">
           <canvas id="bbpChart" class="mini-chart"></canvas>
         </div>
-        <p class="metric-meta" id="bbpMeta">TSL2591 + 850nm IR LED</p>
       </article>
 
-      <article class="card metric-card" data-key="depth">
-        <h2>Depth</h2>
-        <p class="metric-value" id="depthValue">--</p>
-        <p class="metric-unit">m</p>
-        <div class="mini-chart-container">
-          <canvas id="depthChart" class="mini-chart"></canvas>
+      <article class="card metric-card metric-card--interactive" data-key="pressure" tabindex="0" role="button" aria-label="Open detailed graph for pressure">
+        <div class="metric-card-header">
+          <h2>Pressure</h2>
+          <span class="metric-card-hint">Tap to enlarge</span>
         </div>
-        <p class="metric-meta" id="depthMeta">LPS35HW pressure sensor</p>
+        <p class="metric-label">Latest reading</p>
+        <p class="metric-value" id="pressureValue">--</p>
+        <p class="metric-unit">hPa</p>
+        <p class="metric-meta" id="pressureMeta">Last reading time: --</p>
+        <div class="mini-chart-container">
+          <canvas id="pressureChart" class="mini-chart"></canvas>
+        </div>
       </article>
 
-      <article class="card metric-card" data-key="battery">
-        <h2>Battery</h2>
+      <article class="card metric-card metric-card--interactive" data-key="temperature" tabindex="0" role="button" aria-label="Open detailed graph for water temperature">
+        <div class="metric-card-header">
+          <h2>Water Temperature</h2>
+          <span class="metric-card-hint">Tap to enlarge</span>
+        </div>
+        <p class="metric-label">Latest reading</p>
+        <p class="metric-value" id="temperatureValue">--</p>
+        <p class="metric-unit">°C</p>
+        <p class="metric-meta" id="temperatureMeta">Last reading time: --</p>
+        <div class="mini-chart-container">
+          <canvas id="temperatureChart" class="mini-chart"></canvas>
+        </div>
+      </article>
+
+      <article class="card metric-card metric-card--interactive" data-key="battery" tabindex="0" role="button" aria-label="Open detailed graph for battery percentage">
+        <div class="metric-card-header">
+          <h2>Battery</h2>
+          <span class="metric-card-hint">Tap to enlarge</span>
+        </div>
+        <p class="metric-label">Latest reading</p>
         <p class="metric-value" id="batteryValue">--</p>
         <p class="metric-unit">%</p>
+        <p class="metric-meta" id="batteryMeta">Last reading time: --</p>
         <div class="mini-chart-container">
           <canvas id="batteryChart" class="mini-chart"></canvas>
         </div>
-        <p class="metric-meta" id="batteryMeta">System power</p>
-      </article>
-
-      <article class="card metric-card" data-key="signal">
-        <h2>Signal Strength</h2>
-        <p class="metric-value" id="signalValue">--</p>
-        <p class="metric-unit">dBm</p>
-        <div class="mini-chart-container">
-          <canvas id="signalChart" class="mini-chart"></canvas>
-        </div>
-        <p class="metric-meta" id="signalMeta">LoRa link quality</p>
       </article>
     </section>
 
     <section class="panels">
-      <article class="card panel">
-        <div class="panel-header">
-          <h2>Sensor Information</h2>
-          <p>Data acquisition system details</p>
-        </div>
-        <div class="sensor-info">
-          <div class="sensor-item">
-            <h3>BH1750</h3>
-            <p>PAR (Photosynthetically Active Radiation), measured in lux (lx), profiled through 0–100 m depth. Represents visible light intensity (400–700 nm) in the water column.</p>
-          </div>
-          <div class="sensor-item">
-            <h3>TSL2591 + 850nm IR LED</h3>
-            <p>Optical backscatter, measured in m⁻¹ (bbp). The IR LED emits at 850 nm and the TSL2591 detects the light scattered back by suspended particles — serves as a proxy for particulate concentration / turbidity.</p>
-          </div>
-          <div class="sensor-item">
-            <h3>Adafruit LPS35HW</h3>
-            <p>Pressure in hPa (mbar), converted to depth in metres (m) via hydrostatic pressure calculation. Also measures water temperature in °C.</p>
-          </div>
-          <div class="sensor-item">
-            <h3>Arduino Nano 33 IoT</h3>
-            <p>Microcontroller handling data acquisition from all sensors via I2C bus. Interfaces with LoRa transceiver for remote transmission.</p>
-          </div>
-        </div>
-      </article>
-
       <article class="card panel">
         <div class="panel-header">
           <h2>Alerts</h2>
@@ -187,6 +172,42 @@
       </article>
     </section>
   </main>
+
+  <div id="measurementModal" class="measurement-modal" aria-hidden="true">
+    <div class="measurement-modal__backdrop" data-modal-close></div>
+    <section class="measurement-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="measurementModalTitle">
+      <button id="measurementModalClose" class="measurement-modal__close" type="button" aria-label="Close detailed graph">×</button>
+      <div class="measurement-modal__header">
+        <p id="measurementModalSensor" class="measurement-modal__kicker">Measurement</p>
+        <h2 id="measurementModalTitle">Detailed graph</h2>
+        <p id="measurementModalSummary" class="measurement-modal__summary">Select a point to inspect it.</p>
+      </div>
+      <div class="measurement-modal__filters">
+        <label class="measurement-modal__filter-field">
+          <span>From</span>
+          <input id="measurementFilterStart" type="datetime-local" />
+        </label>
+        <label class="measurement-modal__filter-field">
+          <span>To</span>
+          <input id="measurementFilterEnd" type="datetime-local" />
+        </label>
+        <div class="measurement-modal__filter-actions">
+          <button id="measurementFilterApply" type="button">Apply time range</button>
+          <button id="measurementFilterReset" type="button" class="secondary">Reset</button>
+        </div>
+      </div>
+      <div class="measurement-modal__chart-wrap">
+        <canvas id="expandedChart"></canvas>
+      </div>
+      <section class="measurement-modal__list" aria-label="Readings in selected time range">
+        <h3>Readings</h3>
+        <ul id="measurementReadingList"></ul>
+      </section>
+      <div id="measurementModalPoint" class="measurement-modal__point">
+        Click a point on the graph to inspect the exact reading over time.
+      </div>
+    </section>
+  </div>
 
   <footer class="footer">
     <small>Designed for uncertain sensor schemas, adaptable by configuration.</small>
