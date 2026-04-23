@@ -12,3 +12,4 @@ firebase/service-account-key.json
 # Local server temp
 _site/
 firebase/functions/phytowatch-firebase-adminsdk-fbsvc-84cb2fd1ad.json
+node_modules/
