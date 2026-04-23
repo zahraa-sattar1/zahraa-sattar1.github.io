@@ -6,10 +6,15 @@
     "liveServer.settings.ignoreFiles": [
         "**/.git/**",
         "**/.vscode/**",
+        "**/.*/**",
+        "**/.*",
         "**/node_modules/**",
         "**/firebase/**",
         "**/docs/**",
         "**/test-data/**",
-        "**/*.json"
+        "**/*.json",
+        "**/*.tmp",
+        "**/*~",
+        "**/.DS_Store"
     ]
 }
