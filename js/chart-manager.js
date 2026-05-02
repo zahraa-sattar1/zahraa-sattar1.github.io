@@ -113,7 +113,7 @@ function createChart(canvas, sensorKey) {
         },
         tooltip: {
           enabled: true,
-          backgroundColor: "rgba(26, 42, 58, 0.88)",
+          backgroundColor: "rgba(15, 23, 42, 0.9)",
           titleColor: "#fff",
           bodyColor: "#fff",
           borderColor: config.line,
@@ -128,12 +128,12 @@ function createChart(canvas, sensorKey) {
         y: {
           display: true,
           grid: {
-            color: "rgba(15, 90, 143, 0.08)",
+            color: "#E2E8F0",
             drawBorder: false
           },
           ticks: {
             font: { size: 8 },
-            color: "#43566f",
+            color: "#64748B",
             maxTicksLimit: 3,
             padding: 4
           }

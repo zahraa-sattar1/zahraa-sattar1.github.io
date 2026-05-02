@@ -1,23 +1,23 @@
 :root {
-  --bg-0: #f3f7fb;
-  --bg-1: #e3ecf5;
-  --surface: #fcfdfb;
-  --ink: #1a2a3a;
-  --ink-soft: #43566f;
-  --accent: #0f5a8f;
-  --warn: #c66a04;
-  --danger: #b42318;
-  --ok: #0656b2;
-  --offline: #7a7f85;
+  --bg-0: #F1F5F9;
+  --bg-1: #E2E8F0;
+  --surface: #FFFFFF;
+  --ink: #0F172A;
+  --ink-soft: #64748B;
+  --accent: #0284C7;
+  --warn: #F59E0B;
+  --danger: #EF4444;
+  --ok: #10B981;
+  --offline: #94A3B8;
   --radius: 16px;
-  --shadow: 0 10px 30px rgba(10, 30, 50, 0.08);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   --space-1: 0.5rem;
   --space-2: 0.75rem;
   --space-3: 1rem;
   --space-4: 1.25rem;
   --space-5: 1.75rem;
-  --font-display: "Avenir Next", "Segoe UI", sans-serif;
-  --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --font-display: "Inter", system-ui, -apple-system, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
 }
 
 * {
@@ -28,9 +28,7 @@ body {
   margin: 0;
   font-family: var(--font-body);
   color: var(--ink);
-  background: radial-gradient(1200px 700px at 10% -10%, #d6e8f5 0%, transparent 60%),
-              radial-gradient(1000px 600px at 100% 0%, #d0e4f5 0%, transparent 55%),
-              linear-gradient(135deg, var(--bg-0), var(--bg-1));
+  background: var(--bg-0);
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
@@ -41,14 +39,14 @@ body {
   pointer-events: none;
   border-radius: 999px;
   filter: blur(40px);
-  opacity: 0.45;
+  opacity: 0.25;
   z-index: -1;
 }
 
 .bg-shape-a {
   width: 260px;
   height: 260px;
-  background: #6db3d9;
+  background: #48CAE4;
   top: 12%;
   left: -60px;
 }
@@ -56,7 +54,7 @@ body {
 .bg-shape-b {
   width: 320px;
   height: 320px;
-  background: #b3d0e8;
+  background: #0F5A8F;
   bottom: -80px;
   right: -60px;
 }
@@ -67,7 +65,6 @@ body {
   justify-content: space-between;
   gap: var(--space-3);
   align-items: end;
-  border-bottom: 1px solid rgba(15, 90, 143, 0.08);
 }
 
 .brand h1 {
@@ -121,7 +118,7 @@ body {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: var(--space-4);
-  border: 1px solid rgba(15, 90, 143, 0.07);
+  border: 1px solid #E2E8F0;
   animation: riseIn 450ms ease both;
 }
 
@@ -133,8 +130,8 @@ body {
 .metric-card--interactive:hover,
 .metric-card--interactive:focus-visible {
   transform: translateY(-2px);
-  box-shadow: 0 14px 35px rgba(10, 30, 50, 0.12);
-  border-color: rgba(15, 90, 143, 0.2);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border-color: var(--accent);
   outline: none;
 }
 
@@ -215,8 +212,8 @@ body {
 .measurement-modal__backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(11, 22, 34, 0.62);
-  backdrop-filter: blur(8px);
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
 }
 
 .measurement-modal__dialog {
@@ -226,10 +223,10 @@ body {
   max-height: calc(100vh - 2rem);
   overflow: auto;
   margin: 1rem auto;
-  background: linear-gradient(180deg, rgba(252, 253, 251, 0.98), rgba(248, 251, 254, 0.98));
-  border: 1px solid rgba(15, 90, 143, 0.14);
+  background: var(--surface);
+  border: 1px solid #E2E8F0;
   border-radius: 24px;
-  box-shadow: 0 30px 90px rgba(10, 30, 50, 0.3);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   padding: clamp(1rem, 2vw, 1.5rem);
 }
 
@@ -241,11 +238,16 @@ body {
   height: 2.5rem;
   border: 0;
   border-radius: 999px;
-  background: rgba(15, 90, 143, 0.1);
-  color: var(--ink);
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--ink-soft);
   font-size: 1.4rem;
   font-weight: 700;
   cursor: pointer;
+}
+
+.measurement-modal__close:hover {
+  color: var(--ink);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .measurement-modal__header {
@@ -295,12 +297,13 @@ body {
 }
 
 .measurement-modal__filter-field input {
-  border: 1px solid rgba(15, 90, 143, 0.24);
+  border: 1px solid #E2E8F0;
   border-radius: 10px;
   padding: 0.55rem 0.65rem;
   font: inherit;
   color: var(--ink);
-  background: #fff;
+  background: var(--surface);
+  color-scheme: light;
 }
 
 .measurement-modal__filter-actions {
@@ -321,8 +324,8 @@ body {
 }
 
 .measurement-modal__filter-actions button.secondary {
-  background: rgba(15, 90, 143, 0.14);
-  color: var(--ink);
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--ink-soft);
 }
 
 .measurement-modal__chart-wrap {
@@ -332,16 +335,16 @@ body {
 
 .measurement-modal__list {
   margin-top: 1rem;
-  border: 1px solid rgba(15, 90, 143, 0.16);
+  border: 1px solid #E2E8F0;
   border-radius: 12px;
-  background: rgba(15, 90, 143, 0.04);
+  background: #F8FAFC;
 }
 
 .measurement-modal__list h3 {
   margin: 0;
   padding: 0.7rem 0.85rem;
   font-size: 0.9rem;
-  border-bottom: 1px solid rgba(15, 90, 143, 0.12);
+  border-bottom: 1px solid #E2E8F0;
 }
 
 #measurementReadingList {
@@ -355,7 +358,7 @@ body {
 .measurement-reading-item {
   width: 100%;
   border: 0;
-  border-bottom: 1px solid rgba(15, 90, 143, 0.08);
+  border-bottom: 1px solid #E2E8F0;
   padding: 0.65rem 0.85rem;
   display: flex;
   justify-content: space-between;
@@ -370,12 +373,12 @@ body {
 
 .measurement-reading-item:hover,
 .measurement-reading-item:focus-visible {
-  background: rgba(15, 90, 143, 0.08);
+  background: rgba(0, 0, 0, 0.03);
   outline: none;
 }
 
 .measurement-reading-item.active {
-  background: rgba(15, 90, 143, 0.14);
+  background: rgba(2, 132, 199, 0.1);
 }
 
 .measurement-reading-time {
@@ -397,8 +400,8 @@ body {
   margin-top: 1rem;
   padding: 0.9rem 1rem;
   border-radius: 14px;
-  background: rgba(15, 90, 143, 0.06);
-  border: 1px solid rgba(15, 90, 143, 0.1);
+  background: rgba(2, 132, 199, 0.05);
+  border: 1px solid rgba(2, 132, 199, 0.2);
   color: var(--ink);
   line-height: 1.5;
   white-space: pre-line;
@@ -419,16 +422,16 @@ body {
   margin-top: var(--space-3);
   min-height: 180px;
   border-radius: 12px;
-  border: 2px dashed rgba(6, 86, 178, 0.35);
+  border: 2px dashed rgba(2, 132, 199, 0.3);
   display: grid;
   place-items: center;
   color: var(--ink-soft);
   background: repeating-linear-gradient(
     -45deg,
-    rgba(6, 86, 178, 0.06),
-    rgba(6, 86, 178, 0.06) 10px,
-    rgba(6, 86, 178, 0.02) 10px,
-    rgba(6, 86, 178, 0.02) 20px
+    rgba(2, 132, 199, 0.03),
+    rgba(2, 132, 199, 0.03) 10px,
+    rgba(2, 132, 199, 0.01) 10px,
+    rgba(2, 132, 199, 0.01) 20px
   );
 }
 
@@ -444,12 +447,12 @@ body {
   border-left: 4px solid transparent;
   padding: 0.65rem 0.75rem;
   border-radius: 10px;
-  background: #f9faf8;
+  background: rgba(0, 0, 0, 0.02);
 }
 
 .alert-item.warning { border-left-color: var(--warn); }
 .alert-item.critical { border-left-color: var(--danger); }
-.alert-item.neutral { border-left-color: #98a2b3; }
+.alert-item.neutral { border-left-color: var(--ink-soft); }
 
 .health-grid {
   margin-top: var(--space-3);
@@ -479,18 +482,18 @@ body {
   border-radius: 12px;
   padding: var(--space-5);
   text-align: center;
-  background: rgba(15, 90, 143, 0.04);
+  background: rgba(0, 0, 0, 0.01);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .upload-zone:hover {
-  background: rgba(15, 90, 143, 0.08);
+  background: rgba(0, 0, 0, 0.03);
   border-color: var(--accent);
 }
 
 .upload-zone.active {
-  background: rgba(15, 90, 143, 0.12);
+  background: rgba(2, 132, 199, 0.05);
   border-color: var(--ok);
 }
 
@@ -520,7 +523,7 @@ body {
   margin-top: var(--space-3);
   padding: var(--space-3);
   border-radius: 10px;
-  background: rgba(6, 86, 178, 0.08);
+  background: rgba(16, 185, 129, 0.1);
   border-left: 4px solid var(--ok);
 }
 
@@ -533,7 +536,7 @@ body {
 .progress-bar {
   margin-top: var(--space-2);
   height: 6px;
-  background: rgba(6, 86, 178, 0.2);
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -549,7 +552,7 @@ body {
   margin-top: var(--space-3);
   padding: var(--space-3);
   border-radius: 10px;
-  background: rgba(15, 90, 143, 0.08);
+  background: rgba(0, 0, 0, 0.02);
   border-left: 4px solid var(--accent);
 }
 
@@ -577,7 +580,7 @@ body {
 #resultDetails-content {
   margin: var(--space-2) 0 0;
   padding: var(--space-2);
-  background: rgba(15, 90, 143, 0.04);
+  background: rgba(0, 0, 0, 0.05);
   border-radius: 8px;
   overflow-x: auto;
   max-height: 200px;

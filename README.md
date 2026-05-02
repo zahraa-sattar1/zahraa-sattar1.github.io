@@ -6,14 +6,24 @@ A real-time monitoring dashboard for ocean buoy telemetry data. Displays sensor 
 
 ## Quick Start
 
-### View the Dashboard
-Simply visit the live site above. The dashboard will:
-1. ✅ Connect to Firebase Firestore for real-time data
-2. 🟠 Fall back to demo data if Firebase unavailable  
-3. 🔴 Show "No Data Available" if both fail
+### View the Live Dashboard
+Visit the live site: **https://zahraa-sattar1.github.io/?buoy=buoy-001**
+
+The dashboard will automatically:
+1. ✅ Attempt to connect to Firebase Firestore for real-time data
+2. 🟠 Fall back to demo data if Firebase unavailable (after 3-second timeout)
+3. 🔴 Display "No Data Available" if both fail with helpful next steps
+
+**URL Parameters:**
+- `?buoy=buoy-id` - Specifies which buoy to monitor (e.g., `buoy-001`, `buoy-002`)
 
 ### Local Development
 
+**Requirements:**
+- Python 3.x or any static HTTP server
+- Git (to clone the repository)
+
+**Setup:**
 ```bash
 # Clone the repository
 git clone https://github.com/zahraa-sattar1/zahraa-sattar1.github.io

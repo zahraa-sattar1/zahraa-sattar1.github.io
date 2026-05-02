@@ -1,0 +1,115 @@
+{
+  "buoyId": "buoy-002",
+  "readings": [
+    {
+      "timestamp": "2026-05-01T12:00:00Z",
+      "temperature": 14.5,
+      "par": 85000,
+      "bbp": 0.012,
+      "pressure": 1025.5,
+      "battery": 95,
+      "signal": -85,
+      "packetCount": 1001,
+      "connection": "online"
+    },
+    {
+      "timestamp": "2026-05-01T13:00:00Z",
+      "temperature": 14.8,
+      "par": 92000,
+      "bbp": 0.013,
+      "pressure": 1026.0,
+      "battery": 94,
+      "signal": -86,
+      "packetCount": 1002,
+      "connection": "online"
+    },
+    {
+      "timestamp": "2026-05-01T14:00:00Z",
+      "temperature": 15.2,
+      "par": 88000,
+      "bbp": 0.015,
+      "pressure": 1026.2,
+      "battery": 93,
+      "signal": -84,
+      "packetCount": 1003,
+      "connection": "online"
+    },
+    {
+      "timestamp": "2026-05-01T15:00:00Z",
+      "temperature": 15.5,
+      "par": 75000,
+      "bbp": 0.018,
+      "pressure": 1025.8,
+      "battery": 92,
+      "signal": -88,
+      "packetCount": 1004,
+      "connection": "online"
+    },
+    {
+      "timestamp": "2026-05-01T16:00:00Z",
+      "temperature": 15.7,
+      "par": 55000,
+      "bbp": 0.016,
+      "pressure": 1025.1,
+      "battery": 92,
+      "signal": -90,
+      "packetCount": 1005,
+      "connection": "online"
+    },
+    {
+      "timestamp": "2026-05-01T17:00:00Z",
+      "temperature": 15.4,
+      "par": 35000,
+      "bbp": 0.014,
+      "pressure": 1024.5,
+      "battery": 91,
+      "signal": -87,
+      "packetCount": 1006,
+      "connection": "online"
+    },
+    {
+      "timestamp": "2026-05-01T18:00:00Z",
+      "temperature": 15.1,
+      "par": 15000,
+      "bbp": 0.013,
+      "pressure": 1024.0,
+      "battery": 90,
+      "signal": -89,
+      "packetCount": 1007,
+      "connection": "online"
+    },
+    {
+      "timestamp": "2026-05-01T19:00:00Z",
+      "temperature": 14.9,
+      "par": 5000,
+      "bbp": 0.013,
+      "pressure": 1023.8,
+      "battery": 89,
+      "signal": -92,
+      "packetCount": 1008,
+      "connection": "online"
+    },
+    {
+      "timestamp": "2026-05-01T20:00:00Z",
+      "temperature": 14.6,
+      "par": 500,
+      "bbp": 0.012,
+      "pressure": 1023.5,
+      "battery": 89,
+      "signal": -94,
+      "packetCount": 1009,
+      "connection": "online"
+    },
+    {
+      "timestamp": "2026-05-01T21:00:00Z",
+      "temperature": 14.4,
+      "par": 0,
+      "bbp": 0.012,
+      "pressure": 1023.6,
+      "battery": 88,
+      "signal": -95,
+      "packetCount": 1010,
+      "connection": "online"
+    }
+  ]
+}

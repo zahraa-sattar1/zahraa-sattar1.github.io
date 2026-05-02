@@ -15,7 +15,7 @@
 
 import { UI_CONFIG } from "./config.js";
 import { normalizeIncomingPacket } from "./data-adapter.js";
-import { subscribeToReadings } from "./firestore-service.js";
+import { subscribeToReadings, subscribeToBuoys } from "./firestore-service.js";
 import {
   initializeCharts,
   updateCharts,
@@ -36,6 +36,7 @@ if (window.__PHYTOWATCH_APP_STARTED__) {
     packets: [],
     useMockData: false,
     firebaseUnsubscribe: null,
+    buoysUnsubscribe: null,
     mockRefreshTimer: null,
     firebaseFallbackTimer: null,
     lastRenderedFirebaseKey: null,
@@ -49,13 +50,14 @@ if (window.__PHYTOWATCH_APP_STARTED__) {
   };
 
 const el = {
+  buoySelector: document.getElementById("buoySelector"),
+  downloadAllCsv: document.getElementById("downloadAllCsv"),
   firebaseStatusBadge: document.getElementById("firebaseStatusBadge"),
-  connectionBadge: document.getElementById("connectionBadge"),
   lastUpdate: document.getElementById("lastUpdate"),
-  packetCount: document.getElementById("packetCount"),
-  dataRate: document.getElementById("dataRate"),
-  firmware: document.getElementById("firmware"),
-  gateway: document.getElementById("gateway"),
+  iridiumCsq: document.getElementById("iridiumCsq"),
+  sdStorage: document.getElementById("sdStorage"),
+  gpsFix: document.getElementById("gpsFix"),
+  uptime: document.getElementById("uptime"),
   alertsList: document.getElementById("alertsList"),
   measurementModal: document.getElementById("measurementModal"),
   measurementModalClose: document.getElementById("measurementModalClose"),
@@ -96,16 +98,160 @@ const el = {
 const metricCards = Array.from(document.querySelectorAll(".metric-card--interactive"));
 let expandedChart = null;
 
+function initPhytoplanktonBackground() {
+  const canvas = document.getElementById("phytoplanktonCanvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+
+  let width = canvas.width = window.innerWidth;
+  let height = canvas.height = window.innerHeight;
+
+  window.addEventListener("resize", () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  });
+
+  const particles = [];
+  // Scale number of particles based on screen size so it isn't overwhelming on mobile
+  const particleCount = Math.min(150, Math.floor((width * height) / 8000));
+
+  for (let i = 0; i < particleCount; i++) {
+    particles.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      //sizes
+      r: Math.random() * 10.5 + 1.5,
+      baseVx: (Math.random() - 0.5) * 0.3,
+      baseVy: (Math.random() - 0.5) * 0.3 - 0.2, // Drift slightly upwards
+      phase: Math.random() * Math.PI * 2,
+      opacityMultiplier: Math.random() * 0.5 + 0.5,
+      color: Math.random() > 0.3 ? "110, 231, 183" : "56, 189, 248" // Mix of emerald and bioluminescent blue
+    });
+  }
+
+  let time = 0;
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    time += 0.01;
+
+    particles.forEach((p) => {
+      // Add gentle wavy motion mimicking water currents using sine waves
+      p.x += p.baseVx + Math.sin(time + p.phase) * 0.2;
+      p.y += p.baseVy + Math.cos(time + p.phase) * 0.1;
+
+      // Wrap around screen edges smoothly
+      if (p.x < -10) p.x = width + 10;
+      if (p.x > width + 10) p.x = -10;
+      if (p.y < -10) p.y = height + 10;
+      if (p.y > height + 10) p.y = -10;
+
+      // Bioluminescent pulsing effect
+      const pulse = (Math.sin(time * 3 + p.phase) + 1) / 2;
+      const opacity = pulse * p.opacityMultiplier;
+
+      // Draw the bright core
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${p.color}, ${opacity})`;
+      ctx.fill();
+
+      // Draw a larger, faint glow around the core
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r * 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${p.color}, ${opacity * 0.3})`;
+      ctx.fill();
+    });
+
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+
 function startApp() {
+  initBuoySelector();
+  initPhytoplanktonBackground();
   initializeCharts();
   setupMeasurementInteractions();
   init();
 }
 
+function initBuoySelector() {
+  if (!el.buoySelector) return;
+  
+  const currentBuoy = new URLSearchParams(window.location.search).get("buoy") || "buoy-001";
+  el.buoySelector.innerHTML = `<option value="${currentBuoy}">${currentBuoy}</option>`;
+  el.buoySelector.value = currentBuoy;
+
+  el.buoySelector.addEventListener("change", (e) => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("buoy", e.target.value);
+    window.location.href = url.toString();
+  });
+
+  state.buoysUnsubscribe = subscribeToBuoys((buoys) => {
+    if (!buoys || buoys.length === 0) return;
+    
+    const selectedValue = el.buoySelector.value;
+    el.buoySelector.innerHTML = "";
+    
+    let foundCurrent = false;
+    buoys.forEach((b) => {
+      const opt = document.createElement("option");
+      opt.value = b.id;
+      opt.textContent = b.name ? `${b.name} (${b.id})` : b.id;
+      el.buoySelector.appendChild(opt);
+      if (b.id === selectedValue) foundCurrent = true;
+    });
+
+    if (foundCurrent) {
+      el.buoySelector.value = selectedValue;
+    } else {
+      const opt = document.createElement("option");
+      opt.value = selectedValue;
+      opt.textContent = selectedValue;
+      el.buoySelector.appendChild(opt);
+      el.buoySelector.value = selectedValue;
+    }
+  });
+}
+
+function checkAuth() {
+  const overlay = document.getElementById("loginOverlay");
+  const passInput = document.getElementById("sitePassword");
+  const loginBtn = document.getElementById("loginBtn");
+  const loginError = document.getElementById("loginError");
+
+  if (!overlay) {
+    startApp();
+    return;
+  }
+
+  if (sessionStorage.getItem("siteUnlocked") === "true") {
+    overlay.style.display = "none";
+    startApp();
+    return;
+  }
+
+  const attemptLogin = () => {
+    if (passInput.value === "rightophyto") {  
+      sessionStorage.setItem("siteUnlocked", "true");
+      overlay.style.display = "none";
+      startApp();
+    } else {
+      loginError.style.display = "block";
+    }
+  };
+
+  loginBtn.addEventListener("click", attemptLogin);
+  passInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") attemptLogin();
+  });
+}
+
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", startApp, { once: true });
+  document.addEventListener("DOMContentLoaded", checkAuth, { once: true });
 } else {
-  startApp();
+  checkAuth();
 }
 
 function updateFirebaseStatus(status) {
@@ -114,10 +260,10 @@ function updateFirebaseStatus(status) {
   }
 
   const colors = {
-    connected: { bg: "#4CAF50", label: "🟢 Firebase Connected" },
-    fallback: { bg: "#FFA500", label: "🟠 Firebase Error / Using Mock Data" },
-    initializing: { bg: "#FFA500", label: "⏳ Initializing..." },
-    noData: { bg: "#f44336", label: "🔴 No Data Available" }
+    connected: { bg: "#4CAF50", label: "Firebase Connected" },
+    fallback: { bg: "#FFA500", label: "Firebase Error / Using Mock Data" },
+    initializing: { bg: "#FFA500", label: "Initializing..." },
+    noData: { bg: "#f44336", label: "No Data Available" }
   };
 
   const config = colors[status] || colors.initializing;
@@ -208,6 +354,63 @@ function setupMeasurementInteractions() {
     state.activePointIndex = null;
     refreshExpandedMeasurementModal();
   });
+
+  el.downloadAllCsv?.addEventListener("click", downloadAllDataCsv);
+}
+
+function downloadAllDataCsv() {
+  if (!state.packets || state.packets.length === 0) {
+    alert("No data available to download.");
+    return;
+  }
+
+  // Normalize and sort packets chronologically
+  const normalizedPackets = state.packets
+    .map((p) => normalizeIncomingPacket(p))
+    .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+
+  const headers = [
+    "Timestamp", "Connection", "Firmware", "Gateway", "PacketCount", "DataRate",
+    "Temperature (°C)", "PAR (lux)", "BBP (m⁻¹)", "Depth (m)", "Pressure (hPa)", "Battery (%)", "Signal (dBm)"
+  ];
+
+  let csvContent = "\uFEFF" + headers.join(",") + "\n";
+
+  normalizedPackets.forEach((packet) => {
+    const r = packet.readings;
+    const row = [
+      new Date(packet.timestamp).toISOString(),
+      packet.connection,
+      packet.firmware,
+      packet.gateway,
+      packet.packetCount,
+      packet.dataRate,
+      r.temperature,
+      r.par,
+      r.bbp,
+      r.depth,
+      r.pressure,
+      r.battery,
+      r.signal
+    ].map((val) => {
+      if (val === null || val === undefined) return "";
+      return typeof val === "string" && val.includes(",") ? `"${val}"` : val;
+    });
+    csvContent += row.join(",") + "\n";
+  });
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", "phytowatch-all-data.csv");
+  link.style.display = "none";
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
 
 async function init() {
@@ -331,9 +534,6 @@ function renderFromPacket(rawPacket, source = "unknown") {
 }
 
 function renderTopbar(packet) {
-  const online = packet.connection === "online";
-  el.connectionBadge.textContent = online ? "Online" : "Offline";
-  el.connectionBadge.className = `badge ${online ? "online" : "offline"}`;
   el.lastUpdate.textContent = `Last update: ${formatTime(packet.timestamp)}`;
 }
 
@@ -358,10 +558,10 @@ function renderMetrics(packet) {
 }
 
 function renderHealth(packet) {
-  el.packetCount.textContent = String(packet.packetCount);
-  el.dataRate.textContent = packet.dataRate;
-  el.firmware.textContent = packet.firmware;
-  el.gateway.textContent = packet.gateway;
+  el.iridiumCsq.textContent = packet.iridiumCsq !== undefined ? `${packet.iridiumCsq}/5` : "Unknown";
+  el.sdStorage.textContent = packet.sdStorage || "Unknown";
+  el.gpsFix.textContent = packet.gpsFix || "Unknown";
+  el.uptime.textContent = packet.uptime || "Unknown";
 }
 
 function renderAlerts(packet) {
@@ -403,7 +603,12 @@ function formatMeasurementValue(value) {
     return String(value);
   }
 
-  return Math.abs(value) >= 100 ? value.toFixed(1) : value.toFixed(2);
+  if (Math.abs(value) >= 100) {
+    return value.toFixed(1);
+  } else if (Math.abs(value) > 0 && Math.abs(value) < 1) {
+    return value.toFixed(4);
+  }
+  return value.toFixed(2);
 }
 
 function formatTime(iso) {
@@ -569,13 +774,14 @@ function buildExpandedChart(sensorKey, series, selectedIndex = null) {
     expandedChart.destroy();
   }
 
-  const labels = series.map((point) => point.label);
-  const data = series.map((point) => point.value);
+  const data = series.map((point) => ({
+    x: new Date(point.timestamp),
+    y: point.value
+  }));
 
   expandedChart = new Chart(el.expandedChart.getContext("2d"), {
     type: "line",
     data: {
-      labels,
       datasets: [
         {
           label: config.label,
@@ -606,14 +812,14 @@ function buildExpandedChart(sensorKey, series, selectedIndex = null) {
         legend: {
           display: true,
           labels: {
-            color: "#1a2a3a",
+            color: "#0F172A",
             boxWidth: 14,
             usePointStyle: true
           }
         },
         tooltip: {
           enabled: true,
-          backgroundColor: "rgba(26, 42, 58, 0.92)",
+          backgroundColor: "rgba(15, 23, 42, 0.9)",
           titleColor: "#fff",
           bodyColor: "#fff",
           borderColor: config.line,
@@ -636,21 +842,28 @@ function buildExpandedChart(sensorKey, series, selectedIndex = null) {
       scales: {
         y: {
           grid: {
-            color: "rgba(15, 90, 143, 0.1)",
+            color: "#E2E8F0",
             drawBorder: false
           },
           ticks: {
-            color: "#43566f"
+            color: "#64748B"
           }
         },
         x: {
+          type: "time",
+          time: {
+            displayFormats: {
+              minute: "HH:mm",
+              hour: "MMM d, HH:mm",
+              day: "MMM d"
+            }
+          },
           grid: {
-            color: "rgba(15, 90, 143, 0.08)",
+            color: "#E2E8F0",
             drawBorder: false
           },
           ticks: {
-            color: "#43566f",
-            maxRotation: 0,
+            color: "#64748B",
             autoSkip: true
           }
         }
@@ -747,6 +960,9 @@ function renderReadingList(sensorKey, series, selectedIndex) {
 window.addEventListener("beforeunload", () => {
   if (state.firebaseUnsubscribe) {
     state.firebaseUnsubscribe();
+  }
+  if (state.buoysUnsubscribe) {
+    state.buoysUnsubscribe();
   }
   stopMockDataCycle();
 

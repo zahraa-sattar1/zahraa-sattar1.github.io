@@ -4,23 +4,38 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Buoy Telemetry Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <div class="bg-shape bg-shape-a"></div>
-  <div class="bg-shape bg-shape-b"></div>
+  <canvas id="phytoplanktonCanvas" style="position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; opacity: 0.8;"></canvas>
+
+  <div id="loginOverlay" style="position: fixed; inset: 0; background: #0f172a; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white;">
+    <div style="background: #1e293b; padding: 2rem; border-radius: 8px; text-align: center; max-width: 400px; width: 90%; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);">
+      <h2 style="margin-top: 0; font-size: 1.5rem;">Access Restricted</h2>
+      <p style="color: #94a3b8; margin-bottom: 1.5rem; font-size: 0.875rem;">Please enter the password to view the dashboard.</p>
+      <input type="password" id="sitePassword" placeholder="Enter password" style="box-sizing: border-box; width: 100%; padding: 0.75rem; border: 1px solid #334155; border-radius: 4px; background: #0f172a; color: white; margin-bottom: 1rem; font-family: inherit;" />
+      <button id="loginBtn" style="width: 100%; padding: 0.75rem; background: #4f46e5; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-family: inherit;">Unlock Dashboard</button>
+      <p id="loginError" style="color: #ef4444; margin-top: 1rem; display: none; font-size: 0.875rem; margin-bottom: 0;">Incorrect password.</p>
+    </div>
+  </div>
 
   <header class="topbar">
     <div class="brand">
-      <h1>Buoy zahraa Telemetry</h1>
-      <p class="subtitle">Remote Sensor Monitoring</p>
+      <h1>PhytoWatch Data Dashboard</h1>
+      <p class="subtitle">Remote Monitoring of Arctic Phytoplankton</p>
     </div>
     <div class="topbar-meta">
+      <select id="buoySelector" class="badge" style="background: var(--surface); color: var(--ink); border: 1px solid #E2E8F0; cursor: pointer; font-family: inherit; margin-right: 8px;">
+        <option value="buoy-001">Buoy 001</option>
+      </select>
+      <button id="downloadAllCsv" class="badge" style="background: var(--accent); border: none; cursor: pointer; font-family: inherit; margin-right: 8px;">Download All CSV</button>
       <span id="firebaseStatusBadge" class="badge" style="background: #FFA500; margin-right: 8px;">
         <span style="display: inline-block; width: 8px; height: 8px; background: currentColor; border-radius: 50%; margin-right: 4px;"></span>
         Initializing...
       </span>
-      <span id="connectionBadge" class="badge offline">Offline</span>
       <span id="lastUpdate">Last update: --</span>
     </div>
   </header>
@@ -116,20 +131,20 @@
         </div>
         <div class="health-grid">
           <div>
-            <h3>Packet Count</h3>
-            <p id="packetCount">0</p>
+            <h3>Iridium Signal</h3>
+            <p id="iridiumCsq">Unknown</p>
           </div>
           <div>
-            <h3>Data Rate</h3>
-            <p id="dataRate">Unknown</p>
+            <h3>SD Storage</h3>
+            <p id="sdStorage">Unknown</p>
           </div>
           <div>
-            <h3>Firmware</h3>
-            <p id="firmware">Unknown</p>
+            <h3>GPS Fix</h3>
+            <p id="gpsFix">Unknown</p>
           </div>
           <div>
-            <h3>Gateway</h3>
-            <p id="gateway">Unknown</p>
+            <h3>System Uptime</h3>
+            <p id="uptime">Unknown</p>
           </div>
         </div>
       </article>
@@ -210,10 +225,11 @@
   </div>
 
   <footer class="footer">
-    <small>Designed for uncertain sensor schemas, adaptable by configuration.</small>
+    <small>&copy; 2026 PhytoWatch Buoy Monitoring System</small>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
   <script type="module" src="js/firebase-init.js"></script>
   <script type="module" src="js/app.js"></script>
   <script type="module" src="js/bulk-upload.js"></script>

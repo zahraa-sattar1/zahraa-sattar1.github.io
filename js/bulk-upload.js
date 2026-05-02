@@ -68,7 +68,7 @@ async function handleFile(file) {
   try {
     // Validate file type
     if (!file.name.endsWith(".json")) {
-      showError("❌ Please select a JSON file");
+      showError("Please select a JSON file");
       return;
     }
 
@@ -80,7 +80,7 @@ async function handleFile(file) {
     try {
       data = JSON.parse(text);
     } catch (err) {
-      showError(`❌ Invalid JSON: ${err.message}`);
+      showError(`Invalid JSON: ${err.message}`);
       return;
     }
 
@@ -89,13 +89,13 @@ async function handleFile(file) {
     // Validate structure
     if (!data.buoyId || !Array.isArray(data.readings)) {
       showError(
-        "❌ Invalid format. Expected: { buoyId: string, readings: array }"
+        "Invalid format. Expected: { buoyId: string, readings: array }"
       );
       return;
     }
 
     if (data.readings.length === 0) {
-      showError("❌ No readings in file");
+      showError("No readings in file");
       return;
     }
 
@@ -109,7 +109,7 @@ async function handleFile(file) {
 
   } catch (err) {
     console.error("[BulkUpload] Error:", err);
-    showError(`❌ Error: ${err.message}`);
+    showError(`Error: ${err.message}`);
   }
 }
 
@@ -180,7 +180,7 @@ async function uploadReadings(buoyId, readings) {
 
   } catch (err) {
     console.error("[BulkUpload] Batch upload error:", err);
-    showError(`❌ Upload failed: ${err.message}`);
+    showError(`Upload failed: ${err.message}`);
   }
 }
 
