@@ -9,7 +9,7 @@
  */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getFirestore, collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+import { getFirestore, collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp, doc, setDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
 /**
  * Firebase configuration for phytowatch project.
@@ -42,4 +42,4 @@ export const db = getFirestore(app);
 /**
  * Re-export common Firestore query and write functions for convenience
  */
-export { collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp };
+export { collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp, doc, setDoc, writeBatch };

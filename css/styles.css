@@ -605,7 +605,7 @@ body {
     grid-template-columns: 1.2fr 1fr;
   }
 
-  .panels .panel:last-child {
+  .panels .panel:first-child {
     grid-column: 1 / -1;
   }
 }

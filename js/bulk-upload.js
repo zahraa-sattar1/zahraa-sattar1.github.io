@@ -17,7 +17,7 @@
  * ```
  */
 
-import { db, collection, addDoc, serverTimestamp } from "./firebase-init.js";
+import { db, collection, serverTimestamp, doc, setDoc, writeBatch } from "./firebase-init.js";
 
 /**
  * Initialize bulk upload UI and event listeners
@@ -119,30 +119,42 @@ async function handleFile(file) {
  * @param {Array} readings
  */
 async function uploadReadings(buoyId, readings) {
-  const batchSize = 10; // Upload in batches of 10
+  const batchSize = 500; // Max Firestore batch size
   const totalCount = readings.length;
   let successCount = 0;
   const errors = [];
 
+  // Ensure the parent buoy document exists so it appears in the dropdown list
   try {
-    for (let i = 0; i < readings.length; i += batchSize) {
-      const batch = readings.slice(i, i + batchSize);
+    const buoyRef = doc(db, "buoys", buoyId);
+    await setDoc(buoyRef, { id: buoyId, lastSeen: serverTimestamp() }, { merge: true });
+  } catch (err) {
+    console.warn("[BulkUpload] Could not create parent buoy document:", err);
+  }
 
-      // Upload batch
-      for (const reading of batch) {
+  try {
+    const readingsRef = collection(db, "buoys", buoyId, "readings");
+
+    const startTime = Date.now();
+    for (let i = 0; i < readings.length; i += batchSize) {
+      const batchData = readings.slice(i, i + batchSize);
+      const firestoreBatch = writeBatch(db);
+      let validInBatch = 0;
+
+      // Prepare batch
+      for (let j = 0; j < batchData.length; j++) {
+        const reading = batchData[j];
         try {
           // Validate required fields
           if (!reading.timestamp) {
-            errors.push(
-              `Reading ${successCount + 1}: Missing timestamp`
-            );
+            errors.push(`Reading ${i + j + 1}: Missing timestamp`);
             continue;
           }
 
           const normalized = normalizeUploadReading(reading);
 
           // Prepare document
-          const doc = {
+          const docData = {
             timestamp: parseTimestamp(normalized.timestamp),
             temperature: normalized.temperature,
             par: normalized.par,
@@ -159,21 +171,41 @@ async function uploadReadings(buoyId, readings) {
             uploadedAt: serverTimestamp() // Track when it was uploaded
           };
 
-          // Upload to Firestore
-          const readingsRef = collection(db, "buoys", buoyId, "readings");
-          await addDoc(readingsRef, doc);
-          successCount++;
+          // Add to Firestore batch
+          const newDocRef = doc(readingsRef);
+          firestoreBatch.set(newDocRef, docData);
+          validInBatch++;
 
         } catch (err) {
-          errors.push(
-            `Reading ${successCount + 1}: ${err.message}`
-          );
+          errors.push(`Reading ${i + j + 1}: ${err.message}`);
+        }
+      }
+
+      if (validInBatch > 0) {
+        try {
+          const batchStart = Date.now();
+          await firestoreBatch.commit();
+          successCount += validInBatch;
+          
+          // Respect Firestore's 500 writes/sec limit to completely avoid exponential backoff
+          const commitTime = Date.now() - batchStart;
+          const delay = Math.max(1000 - commitTime, 0);
+          if (delay > 0) {
+            await new Promise((resolve) => setTimeout(resolve, delay));
+          }
+        } catch (err) {
+          errors.push(`Batch ${Math.floor(i / batchSize) + 1} commit failed: ${err.message}`);
         }
       }
 
       // Update progress
-      const progress = Math.round((i + batchSize) / totalCount * 100);
-      showProgress(Math.min(progress, 100));
+      const progress = Math.round(Math.min(i + batchSize, totalCount) / totalCount * 100);
+      showProgress(progress);
+
+      const elapsed = (Date.now() - startTime) / 1000 || 1;
+      const itemsProcessed = Math.min(i + batchSize, totalCount);
+      const etaSeconds = Math.round((totalCount - itemsProcessed) / (itemsProcessed / elapsed));
+      showStatus(`Uploading... ${progress}% complete (ETA: ${etaSeconds}s)`);
     }
 
     showSuccess(successCount, totalCount, errors);
